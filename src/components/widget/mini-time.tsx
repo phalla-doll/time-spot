@@ -13,7 +13,7 @@ export default function MiniTime() {
                 </Button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Card className="shadow-none border-border/50">
+                <Card className="shadow-none border-border/50 rounded-2xl hover:bg-foreground hover:text-background">
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">Phnom Penh</CardTitle>
@@ -27,7 +27,7 @@ export default function MiniTime() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="shadow-none border-border/50">
+                <Card className="shadow-none border-border/50 rounded-2xl hover:bg-foreground hover:text-background">
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">Los Angeles</CardTitle>
@@ -41,7 +41,7 @@ export default function MiniTime() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="shadow-none border-border/50">
+                <Card className="shadow-none border-border/50 rounded-2xl hover:bg-foreground hover:text-background">
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">London</CardTitle>
@@ -55,7 +55,7 @@ export default function MiniTime() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="shadow-none border-border/50">
+                <Card className="shadow-none border-border/50 rounded-2xl hover:bg-foreground hover:text-background">
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">Singapore</CardTitle>
