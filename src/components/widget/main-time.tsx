@@ -3,10 +3,12 @@
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import Weather from "./weather";
 
 export default function MainTime() {
     const [now, setNow] = useState(DateTime.now());
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
+    // Weather moved to separate component
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -39,9 +41,12 @@ export default function MainTime() {
                 <h1 className="text-9xl sm:text-[20rem] lg:text-[28rem] font-bold tracking-tight">{timeFormat === "24h" ? now.toFormat("HH:mm:ss") : now.toFormat("hh:mm:ss")}</h1>
             </div>
             <div className="container mx-4 sm:mx-auto mb-6">
-                <div className="flex justify-end items-center gap-x-4">
+                <div className="flex justify-end items-center gap-x-6">
                     <div className="flex gap-2">
-                        <span className="text-muted-foreground">{now.toLocaleString(DateTime.DATE_HUGE)}</span>
+                        <div className="flex flex-col">
+                            <span className="text-muted-foreground">{now.toLocaleString(DateTime.DATE_HUGE)}</span>
+                            <Weather />
+                        </div>
                         <span className="text-muted-foreground">{now.toFormat("ZZZZ")}</span>
                     </div>
                     <div>
