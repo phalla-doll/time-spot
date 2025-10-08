@@ -36,10 +36,14 @@ export default function MainTime() {
     return (
         <div className="mx-4 sm:mx-auto border-b border-gray">
             <div className="flex justify-center items-center my-20">
-                <h1 className="text-9xl sm:text-[20rem] lg:text-[28rem] font-bold tracking-tight">{timeFormat === "24h" ? now.toFormat("HH:mm:ss") : now.toFormat("hh:mm:ss a")}</h1>
+                <h1 className="text-9xl sm:text-[20rem] lg:text-[28rem] font-bold tracking-tight">{timeFormat === "24h" ? now.toFormat("HH:mm:ss") : now.toFormat("hh:mm:ss")}</h1>
             </div>
-            <div className="container mx-4 sm:mx-auto mb-2">
-                <div className="flex justify-end items-center gap-2">
+            <div className="container mx-4 sm:mx-auto mb-6">
+                <div className="flex justify-end items-center gap-x-4">
+                    <div className="flex gap-2 group group:text-sm group:opacity-70">
+                        <span className="">{now.toFormat("yyyy-MM-dd")}</span>
+                        <span className="">{now.toFormat("ZZZZ")}</span>
+                    </div>
                     <div>
                         <ToggleGroup
                             size="sm"
