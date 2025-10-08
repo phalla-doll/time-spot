@@ -37,7 +37,7 @@ export default function MainTime() {
     return (
         <div className="mx-4 sm:mx-auto border-b border-gray">
             <div className="flex justify-center items-center my-20">
-                <h1 className="text-9xl sm:text-[20rem] lg:text-[28rem] font-bold tracking-tight">{timeFormat === "24h" ? now.toFormat("HH:mm:ss") : now.toFormat("hh:mm:ss")}</h1>
+                <h1 className="text-9xl sm:text-[20rem] lg:text-[28rem] font-bold tracking-tighter">{timeFormat === "24h" ? now.toFormat("HH:mm:ss") : now.toFormat("hh:mm:ss")}</h1>
             </div>
             <div className="container mx-4 sm:mx-auto mb-6">
                 <div className="flex justify-end items-center gap-x-6">
