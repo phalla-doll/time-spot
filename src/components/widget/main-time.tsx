@@ -40,9 +40,9 @@ export default function MainTime() {
             </div>
             <div className="container mx-4 sm:mx-auto mb-6">
                 <div className="flex justify-end items-center gap-x-4">
-                    <div className="flex gap-2 group group:text-sm group:opacity-70">
-                        <span className="">{now.toFormat("yyyy-MM-dd")}</span>
-                        <span className="">{now.toFormat("ZZZZ")}</span>
+                    <div className="flex gap-2">
+                        <span className="text-muted-foreground">{now.toLocaleString(DateTime.DATE_HUGE)}</span>
+                        <span className="text-muted-foreground">{now.toFormat("ZZZZ")}</span>
                     </div>
                     <div>
                         <ToggleGroup
