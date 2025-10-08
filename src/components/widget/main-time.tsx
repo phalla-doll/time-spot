@@ -8,7 +8,6 @@ import Weather from "./weather";
 export default function MainTime() {
     const [now, setNow] = useState(DateTime.now());
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
-    // Weather moved to separate component
 
     useEffect(() => {
         const intervalId = setInterval(() => {
