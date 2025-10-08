@@ -64,7 +64,7 @@ export default function Weather() {
                     | undefined;
                 setWeatherTempC(typeof temp === "number" ? temp : null);
                 setWeatherDesc(describeWeatherCode(code));
-            } catch (err) {
+            } catch (_err) {
                 if (!didCancel) setWeatherError("Unable to load weather");
             } finally {
                 if (!didCancel) setWeatherLoading(false);
@@ -98,7 +98,7 @@ export default function Weather() {
         return () => {
             didCancel = true;
         };
-    }, []);
+    }, [describeWeatherCode]);
 
     return (
         <div className="flex items-center gap-2">
