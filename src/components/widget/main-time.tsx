@@ -2,7 +2,7 @@
 
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export default function MainTime() {
     const [now, setNow] = useState(DateTime.now());
