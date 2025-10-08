@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 
@@ -52,11 +52,16 @@ export default function Weather() {
                 setWeatherError("");
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
                 const res = await fetch(url);
-                if (!res.ok) throw new Error(`Weather request failed: ${res.status}`);
+                if (!res.ok)
+                    throw new Error(`Weather request failed: ${res.status}`);
                 const data = await res.json();
                 if (didCancel) return;
-                const temp = data?.current_weather?.temperature as number | undefined;
-                const code = data?.current_weather?.weathercode as number | undefined;
+                const temp = data?.current_weather?.temperature as
+                    | number
+                    | undefined;
+                const code = data?.current_weather?.weathercode as
+                    | number
+                    | undefined;
                 setWeatherTempC(typeof temp === "number" ? temp : null);
                 setWeatherDesc(describeWeatherCode(code));
             } catch (err) {
@@ -86,7 +91,7 @@ export default function Weather() {
                 const { latitude, longitude } = pos.coords;
                 await fetchWeather(latitude, longitude);
             } catch {
-                await fetchWeather(40.7128, -74.0060);
+                await fetchWeather(40.7128, -74.006);
             }
         })();
 
@@ -106,15 +111,17 @@ export default function Weather() {
             {!weatherLoading && !weatherError && (
                 <>
                     {weatherTempC !== null && (
-                        <span className="text-muted-foreground">{Math.round(weatherTempC)}°C</span>
+                        <span className="text-muted-foreground">
+                            {Math.round(weatherTempC)}°C
+                        </span>
                     )}
                     {weatherDesc && (
-                        <span className="text-muted-foreground">{weatherDesc}</span>
+                        <span className="text-muted-foreground">
+                            {weatherDesc}
+                        </span>
                     )}
                 </>
             )}
         </div>
     );
 }
-
-

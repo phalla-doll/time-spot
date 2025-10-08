@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
@@ -19,11 +19,14 @@ export default function MainTime() {
 
     useEffect(() => {
         try {
-            const saved = typeof window !== "undefined" ? localStorage.getItem("timeFormat") : null;
+            const saved =
+                typeof window !== "undefined"
+                    ? localStorage.getItem("timeFormat")
+                    : null;
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
             }
-        } catch { }
+        } catch {}
     }, []);
 
     useEffect(() => {
@@ -31,22 +34,30 @@ export default function MainTime() {
             if (typeof window !== "undefined") {
                 localStorage.setItem("timeFormat", timeFormat);
             }
-        } catch { }
+        } catch {}
     }, [timeFormat]);
 
     return (
         <div className="mx-4 sm:mx-auto border-b border-gray">
             <div className="flex justify-center items-center my-20">
-                <h1 className="text-7xl sm:text-[18rem] lg:text-[28rem] font-bold tracking-tighter">{timeFormat === "24h" ? now.toFormat("HH:mm:ss") : now.toFormat("hh:mm:ss")}</h1>
+                <h1 className="text-7xl sm:text-[18rem] lg:text-[28rem] font-bold tracking-tighter">
+                    {timeFormat === "24h"
+                        ? now.toFormat("HH:mm:ss")
+                        : now.toFormat("hh:mm:ss")}
+                </h1>
             </div>
             <div className="container mx-4 sm:mx-auto mb-10">
                 <div className="flex justify-end items-center gap-x-6">
                     <div className="flex gap-2 text-sm sm:text-base">
                         <div className="flex flex-col">
-                            <span className="text-muted-foreground">{now.toLocaleString(DateTime.DATE_HUGE)}</span>
+                            <span className="text-muted-foreground">
+                                {now.toLocaleString(DateTime.DATE_HUGE)}
+                            </span>
                             <Weather />
                         </div>
-                        <span className="text-muted-foreground">{now.toFormat("ZZZZ")}</span>
+                        <span className="text-muted-foreground">
+                            {now.toFormat("ZZZZ")}
+                        </span>
                     </div>
                     <div>
                         <ToggleGroup
@@ -60,13 +71,12 @@ export default function MainTime() {
                                 }
                             }}
                         >
-                            <ToggleGroupItem value="24h" >24H</ToggleGroupItem>
-                            <ToggleGroupItem value="12h" >12H</ToggleGroupItem>
+                            <ToggleGroupItem value="24h">24H</ToggleGroupItem>
+                            <ToggleGroupItem value="12h">12H</ToggleGroupItem>
                         </ToggleGroup>
                     </div>
                 </div>
             </div>
         </div>
-
-    )
+    );
 }
