@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { SearchIcon } from "lucide-react";
 
 export default function Navbar() {
     return (
@@ -6,6 +7,12 @@ export default function Navbar() {
             <div className="flex justify-between items-center p-4">
                 <div className="">
                     <h1 className="text-xl font-bold tracking-tight">Time Spot</h1>
+                </div>
+                <div className="">
+                    <Button size="sm" variant="ghost" className="flex gap-1 opacity-70 hover:opacity-100">
+                        <SearchIcon className="size-4" />
+                        <span>Search</span>
+                    </Button>
                 </div>
                 <div className="flex gap-4">
                     <Button size="sm" variant="outline">Login</Button>
