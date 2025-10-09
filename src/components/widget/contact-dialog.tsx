@@ -77,8 +77,9 @@ export default function ContactDialog() {
                 <DialogHeader>
                     <DialogTitle>Interested in TimeSpot?</DialogTitle>
                     <DialogDescription>
-                        Time Spot is an experimental project. If you're interested,
-                        please share your contact details and we'll reach out.
+                        Time Spot is an experimental project. If you're
+                        interested, please share your contact details and we'll
+                        reach out.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -120,7 +121,8 @@ export default function ContactDialog() {
                                             />
                                         </FormControl>
                                         <FormDescription className="text-xs text-muted-foreground">
-                                            Contact can be email, telegram, phone, etc.
+                                            Contact can be email, telegram,
+                                            phone, etc.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
