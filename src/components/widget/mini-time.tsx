@@ -104,7 +104,7 @@ export default function MiniTime() {
         userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
     // Create unified array with user's current city as first item
-    const allCityData = [
+    const favoriteCities = [
         {
             city: userCity,
             offset: userOffset,
@@ -130,7 +130,7 @@ export default function MiniTime() {
                 </Button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {allCityData.map((city) => (
+                {favoriteCities.map((city) => (
                     <Card
                         key={city.timezone}
                         className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background"
