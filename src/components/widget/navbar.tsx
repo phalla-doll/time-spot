@@ -27,7 +27,14 @@ export default function Navbar() {
                             width={24}
                             height={24}
                             alt="TimeSpot Logo"
-                            className="h-5 w-auto"
+                            className="h-5 w-auto dark:hidden"
+                        ></Image>
+                        <Image
+                            src={"/logo/timespot-logo-white.svg"}
+                            width={24}
+                            height={24}
+                            alt="TimeSpot Logo"
+                            className="h-5 w-auto hidden dark:block"
                         ></Image>
                         <span className="hidden sm:block">Time Spot</span>
                     </h1>
