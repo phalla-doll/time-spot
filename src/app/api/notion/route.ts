@@ -56,7 +56,7 @@ export async function POST(request: Request) {
             properties: {
                 // Adjust property names and types to match your Notion database schema
                 name: {
-                    title: [
+                    rich_text: [
                         {
                             text: { content: name },
                         },
@@ -68,10 +68,7 @@ export async function POST(request: Request) {
                             text: { content: contact },
                         },
                     ],
-                },
-                SubmittedAt: {
-                    date: { start: new Date().toISOString() },
-                },
+                }
             },
         });
 
