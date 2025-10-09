@@ -103,10 +103,20 @@ export default function MiniTime() {
     const userPeriod =
         userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
-    // Get data for selected cities
-    const cityData = selectedCities.map(city =>
-        getTimezoneData(city.timezone, city.displayName)
-    );
+    // Create unified array with user's current city as first item
+    const allCityData = [
+        {
+            city: userCity,
+            offset: userOffset,
+            time: userTime,
+            period: userPeriod,
+            timezone: activeTimezone,
+        },
+        ...selectedCities.map(city => ({
+            ...getTimezoneData(city.timezone, city.displayName),
+            timezone: city.timezone,
+        }))
+    ];
 
     return (
         <div className="container mx-4 sm:mx-auto my-15">
@@ -120,31 +130,9 @@ export default function MiniTime() {
                 </Button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Card className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background">
-                    <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                {userCity}
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                {userOffset}
-                            </p>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex justify-between items-center">
-                            <h1 className="text-4xl font-normal tracking-tight">
-                                {userTime}
-                            </h1>
-                            <p className="text-sm text-muted-foreground">
-                                {userPeriod}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-                {cityData.map((city, index) => (
+                {allCityData.map((city) => (
                     <Card
-                        key={selectedCities[index].timezone}
+                        key={city.timezone}
                         className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background"
                     >
                         <CardHeader>
