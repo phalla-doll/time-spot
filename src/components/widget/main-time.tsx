@@ -122,22 +122,24 @@ export default function MainTime() {
                 <div className="flex justify-end items-center gap-x-6">
                     <div className="flex gap-2 text-sm sm:text-base">
                         <div className="flex flex-col">
-                            <span
-                                className="text-muted-foreground"
-                                suppressHydrationWarning
-                            >
-                                {mounted
-                                    ? now.toLocaleString(DateTime.DATE_HUGE)
-                                    : ""}
-                            </span>
                             <Weather />
+                            <div className="flex gap-x-2">
+                                <span
+                                    className="text-muted-foreground"
+                                    suppressHydrationWarning
+                                >
+                                    {mounted
+                                        ? now.toLocaleString(DateTime.DATE_HUGE)
+                                        : ""}
+                                </span>
+                                <span
+                                    className="text-muted-foreground"
+                                    suppressHydrationWarning
+                                >
+                                    {mounted ? now.toFormat("ZZZZ") : ""}
+                                </span>
+                            </div>
                         </div>
-                        <span
-                            className="text-muted-foreground"
-                            suppressHydrationWarning
-                        >
-                            {mounted ? now.toFormat("ZZZZ") : ""}
-                        </span>
                     </div>
                     <div>
                         <ToggleGroup
