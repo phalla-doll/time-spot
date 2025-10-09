@@ -79,7 +79,7 @@ export default function MiniTime() {
             city: displayName,
             offset: time.toFormat("ZZZZ"),
             time: time.toFormat("HH:mm"),
-            period: time.hour >= 6 && time.hour < 18 ? "Day" : "Night"
+            period: time.hour >= 6 && time.hour < 18 ? "Day" : "Night",
         };
     };
 
@@ -88,7 +88,8 @@ export default function MiniTime() {
     const userCity = formatTimezoneDisplay(activeTimezone).split(", ")[0];
     const userOffset = userTimezone.toFormat("ZZZZ");
     const userTime = userTimezone.toFormat("HH:mm");
-    const userPeriod = userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
+    const userPeriod =
+        userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
     // Get data for popular cities
     const tokyo = getTimezoneData("Asia/Tokyo", "Tokyo");
@@ -145,7 +146,9 @@ export default function MiniTime() {
                             <h1 className="text-4xl font-normal tracking-tight">
                                 {tokyo.time}
                             </h1>
-                            <p className="text-sm text-muted-foreground">{tokyo.period}</p>
+                            <p className="text-sm text-muted-foreground">
+                                {tokyo.period}
+                            </p>
                         </div>
                     </CardContent>
                 </Card>
