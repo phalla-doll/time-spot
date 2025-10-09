@@ -15,7 +15,12 @@ export default function ThemeSwitcher() {
 
     if (!mounted) {
         return (
-            <Button size="sm" variant="ghost" className="w-9 px-0" aria-label="Toggle theme" />
+            <Button
+                size="sm"
+                variant="ghost"
+                className="w-9 px-0"
+                aria-label="Toggle theme"
+            />
         );
     }
 
@@ -38,5 +43,3 @@ export default function ThemeSwitcher() {
         </Button>
     );
 }
-
-
