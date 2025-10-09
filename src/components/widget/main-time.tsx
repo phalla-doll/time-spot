@@ -122,7 +122,6 @@ export default function MainTime() {
                 <div className="flex justify-end items-center gap-x-6">
                     <div className="flex gap-2 text-sm sm:text-base">
                         <div className="flex flex-col">
-                            <Weather />
                             <div className="flex gap-x-2">
                                 <span
                                     className="text-muted-foreground"
@@ -139,6 +138,7 @@ export default function MainTime() {
                                     {mounted ? now.toFormat("ZZZZ") : ""}
                                 </span>
                             </div>
+                            <Weather />
                         </div>
                     </div>
                     <div>
