@@ -1,8 +1,13 @@
-import { SearchIcon } from "lucide-react";
+"use client";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import TimezoneSearch from "./timezone-search";
+import { useState } from "react";
+import { SearchIcon } from "lucide-react";
 
 export default function Navbar() {
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div className="container mx-auto">
             <div className="flex justify-between items-center p-4">
@@ -18,15 +23,17 @@ export default function Navbar() {
                         Time Spot
                     </h1>
                 </div>
-                <div className="">
+                <div>
                     <Button
                         size="sm"
                         variant="ghost"
                         className="flex gap-1 opacity-70 hover:opacity-100"
+                        onClick={() => setIsOpen(true)}
                     >
                         <SearchIcon className="size-4" />
                         <span>Search</span>
                     </Button>
+                    <TimezoneSearch open={isOpen} onOpenChange={setIsOpen} />
                 </div>
                 <div className="flex gap-4">
                     <Button size="sm" variant="outline">
