@@ -4,8 +4,18 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import ThemeSwitcher from "@/components/widget/theme-switcher";
 import TimezoneSearch from "@/components/widget/timezone-search";
+import { Input } from "@/components/ui/input";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -57,9 +67,38 @@ export default function Navbar() {
                 </div>
                 <div className="flex gap-2 items-center">
                     <ThemeSwitcher />
-                    <Button size="sm" variant="default">
-                        Register / Log in
-                    </Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="sm" variant="default">
+                                Register / Log in
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>
+                                    Interested in Time Spot?
+                                </DialogTitle>
+                                <DialogDescription>
+                                    This is a experimental project. If you are
+                                    interested in Time Spot, please use this
+                                    form to contact us.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-3 py-2">
+                                <Input
+                                    type="text"
+                                    placeholder="Enter your telegram contact"
+                                />
+                                <Button variant="default">Submit</Button>
+                            </div>
+                            <DialogFooter className="sm:justify-start">
+                                <p className="text-xs text-muted-foreground">
+                                    By continuing, you agree to our Terms and
+                                    Privacy Policy.
+                                </p>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
         </div>
