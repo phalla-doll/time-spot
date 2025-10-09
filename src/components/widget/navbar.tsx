@@ -17,15 +17,49 @@ import ThemeSwitcher from "@/components/widget/theme-switcher";
 import TimezoneSearch from "@/components/widget/timezone-search";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [name, setName] = useState("");
+    const [contact, setContact] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     const handleTimezoneSelect = (timezone: string) => {
         // Trigger a custom event to notify other components
         window.dispatchEvent(
             new CustomEvent("timezoneChanged", { detail: timezone }),
         );
+    };
+
+    const handleSubmit = async () => {
+        setSubmitError(null);
+        setSubmitSuccess(false);
+        if (!name.trim() || !contact.trim()) {
+            setSubmitError("Please fill in both fields.");
+            return;
+        }
+        setSubmitting(true);
+        try {
+            const res = await fetch("/api/notion", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name.trim(), contact: contact.trim() }),
+            });
+            if (!res.ok) {
+                const data = (await res.json().catch(() => ({ error: "Unknown error" }))) as { error?: string };
+                throw new Error(data.error || `Request failed (${res.status})`);
+            }
+            setSubmitSuccess(true);
+            setName("");
+            setContact("");
+        } catch (err) {
+            setSubmitError(err instanceof Error ? err.message : "Failed to submit");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -92,6 +126,8 @@ export default function Navbar() {
                                         <Input
                                             type="text"
                                             placeholder="Enter your name"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
                                         />
                                     </div>
                                     <div className="flex flex-col gap-1.5">
@@ -99,13 +135,24 @@ export default function Navbar() {
                                         <Input
                                             type="text"
                                             placeholder="Enter your contact"
+                                            value={contact}
+                                            onChange={(e) => setContact(e.target.value)}
                                         />
                                         <p className="text-xs text-muted-foreground">
                                             Contact can be email, telegram, etc.
                                         </p>
                                     </div>
+                                    {submitError ? (
+                                        <p className="text-xs text-destructive">{submitError}</p>
+                                    ) : null}
+                                    {submitSuccess ? (
+                                        <p className="text-xs text-emerald-600">Thanks! We received your info.</p>
+                                    ) : null}
                                 </div>
-                                <Button variant="default">Submit</Button>
+                                <Button variant="default" onClick={handleSubmit} disabled={submitting}>
+                                    {submitting && <Spinner className="size-4" />}
+                                    {submitting ? "Submitting..." : "Submit"}
+                                </Button>
                             </div>
                             <DialogFooter className="sm:justify-start">
                                 <p className="text-xs text-muted-foreground">
