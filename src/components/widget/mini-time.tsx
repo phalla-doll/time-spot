@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function MiniTime() {
     return (
-        <div className="container mx-4 sm:mx-auto my-20">
+        <div className="container mx-4 sm:mx-auto my-15">
             <div className="flex justify-between items-center mb-10">
                 <h1 className="text-2xl sm:text-4xl font-medium tracking-tight">
                     Phnom Penh, Cambodia
