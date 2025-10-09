@@ -84,11 +84,16 @@ export default function Navbar() {
                                     form to contact us.
                                 </DialogDescription>
                             </DialogHeader>
-                            <div className="grid gap-3 py-2">
-                                <Input
-                                    type="text"
-                                    placeholder="Enter your telegram contact"
-                                />
+                            <div className="grid gap-4 py-2">
+                                <div className="flex flex-col gap-1">
+                                    <Input
+                                        type="text"
+                                        placeholder="Enter your contact"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Contact can be email, telegram, etc.
+                                    </p>
+                                </div>
                                 <Button variant="default">Submit</Button>
                             </div>
                             <DialogFooter className="sm:justify-start">
