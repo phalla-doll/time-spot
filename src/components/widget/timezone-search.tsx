@@ -17,28 +17,32 @@ interface TimezoneSearchProps {
     onTimezoneSelect?: (timezone: string) => void;
 }
 
-export default function TimezoneSearch({ open, onOpenChange, onTimezoneSelect }: TimezoneSearchProps) {
+export default function TimezoneSearch({
+    open,
+    onOpenChange,
+    onTimezoneSelect,
+}: TimezoneSearchProps) {
     const [timezones, setTimezones] = useState<string[]>([]);
 
     useEffect(() => {
         // Get all available timezones using the modern Intl API
         try {
-            const availableTimezones = Intl.supportedValuesOf('timeZone');
+            const availableTimezones = Intl.supportedValuesOf("timeZone");
             setTimezones(availableTimezones.sort());
         } catch {
             // Fallback to common timezones if Intl.supportedValuesOf is not available
             const commonTimezones = [
-                'UTC',
-                'America/New_York',
-                'America/Chicago',
-                'America/Denver',
-                'America/Los_Angeles',
-                'Europe/London',
-                'Europe/Paris',
-                'Europe/Berlin',
-                'Asia/Tokyo',
-                'Asia/Shanghai',
-                'Australia/Sydney',
+                "UTC",
+                "America/New_York",
+                "America/Chicago",
+                "America/Denver",
+                "America/Los_Angeles",
+                "Europe/London",
+                "Europe/Paris",
+                "Europe/Berlin",
+                "Asia/Tokyo",
+                "Asia/Shanghai",
+                "Australia/Sydney",
             ];
             setTimezones(commonTimezones);
         }
@@ -65,7 +69,13 @@ export default function TimezoneSearch({ open, onOpenChange, onTimezoneSelect }:
                             <div className="flex flex-col">
                                 <span className="font-medium">{timezone}</span>
                                 <span className="text-xs text-muted-foreground">
-                                    {DateTime.now().setZone(timezone).toFormat('HH:mm')} - {DateTime.now().setZone(timezone).toFormat('ZZZZ')}
+                                    {DateTime.now()
+                                        .setZone(timezone)
+                                        .toFormat("HH:mm")}{" "}
+                                    -{" "}
+                                    {DateTime.now()
+                                        .setZone(timezone)
+                                        .toFormat("ZZZZ")}
                                 </span>
                             </div>
                         </CommandItem>
