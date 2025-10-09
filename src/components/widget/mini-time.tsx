@@ -297,7 +297,7 @@ export default function MiniTime() {
         : [];
 
     return (
-        <div className="container mx-2 sm:mx-auto my-15">
+        <div className="container mx-2 sm:mx-auto my-10 sm:my-15">
             <div className="flex justify-between items-center mx-4 mb-10">
                 <h1
                     className="text-2xl sm:text-4xl font-medium tracking-tight"
