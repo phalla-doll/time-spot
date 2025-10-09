@@ -109,9 +109,7 @@ export default function MiniTime() {
                 new CustomEvent("favoritesChanged", { detail: initial }),
             );
         } catch {}
-        // We want to run this once on mount using current defaults
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [systemTimezone, defaultCities]);
 
     // Listen for time format changes and keep activeTimezone in sync with favorites
     useEffect(() => {
@@ -199,16 +197,7 @@ export default function MiniTime() {
             : timezone;
     };
 
-    // Get current user timezone info
-    const userTimezone = currentTime.setZone(activeTimezone);
-    const userCity = formatTimezoneDisplay(activeTimezone).split(", ")[0];
-    const userOffset = userTimezone.toFormat("ZZZZ");
-    const userTime =
-        timeFormat === "24h"
-            ? userTimezone.toFormat("HH:mm")
-            : userTimezone.toFormat("hh:mm");
-    const userPeriod =
-        userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
+    // Get current user timezone info (derived as needed elsewhere)
 
     // Handle timezone change when clicking on a city card
     const handleTimezoneChange = (newTimezone: string) => {
