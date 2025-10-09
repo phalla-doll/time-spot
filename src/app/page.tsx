@@ -1,7 +1,7 @@
+import type { Metadata } from "next";
 import MainTime from "@/components/widget/main-time";
 import MiniTime from "@/components/widget/mini-time";
 import Navbar from "@/components/widget/navbar";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "World Clock - Track Time Across Multiple Time Zones",
