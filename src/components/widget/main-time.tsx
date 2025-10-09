@@ -65,7 +65,6 @@ export default function MainTime() {
                             value={timeFormat}
                             type="single"
                             variant="outline"
-                            className="bg-muted/50 p-1 rounded-md"
                             onValueChange={(val) => {
                                 if (val && (val === "24h" || val === "12h")) {
                                     setTimeFormat(val);
