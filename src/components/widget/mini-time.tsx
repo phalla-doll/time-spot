@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+interface CityTimezone {
+    timezone: string;
+    displayName: string;
+}
+
 export default function MiniTime() {
     const [activeTimezone, setActiveTimezone] = useState<string>(() => {
         if (typeof window !== "undefined") {
@@ -22,6 +27,13 @@ export default function MiniTime() {
     });
 
     const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
+
+    // Default cities - can be customized by user
+    const [selectedCities] = useState<CityTimezone[]>([
+        { timezone: "Asia/Tokyo", displayName: "Tokyo" },
+        { timezone: "America/New_York", displayName: "New York" },
+        { timezone: "Europe/Paris", displayName: "Paris" },
+    ]);
 
     // Update current time every second
     useEffect(() => {
@@ -91,10 +103,10 @@ export default function MiniTime() {
     const userPeriod =
         userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
-    // Get data for popular cities
-    const tokyo = getTimezoneData("Asia/Tokyo", "Tokyo");
-    const newYork = getTimezoneData("America/New_York", "New York");
-    const paris = getTimezoneData("Europe/Paris", "Paris");
+    // Get data for selected cities
+    const cityData = selectedCities.map(city =>
+        getTimezoneData(city.timezone, city.displayName)
+    );
 
     return (
         <div className="container mx-4 sm:mx-auto my-15">
@@ -130,72 +142,33 @@ export default function MiniTime() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background">
-                    <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                {tokyo.city}
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                {tokyo.offset}
-                            </p>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex justify-between items-center">
-                            <h1 className="text-4xl font-normal tracking-tight">
-                                {tokyo.time}
-                            </h1>
-                            <p className="text-sm text-muted-foreground">
-                                {tokyo.period}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background">
-                    <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                {newYork.city}
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                {newYork.offset}
-                            </p>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex justify-between items-center">
-                            <h1 className="text-4xl font-normal tracking-tight">
-                                {newYork.time}
-                            </h1>
-                            <p className="text-sm text-muted-foreground">
-                                {newYork.period}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background">
-                    <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                {paris.city}
-                            </CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                {paris.offset}
-                            </p>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex justify-between items-center">
-                            <h1 className="text-4xl font-normal tracking-tight">
-                                {paris.time}
-                            </h1>
-                            <p className="text-sm text-muted-foreground">
-                                {paris.period}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                {cityData.map((city, index) => (
+                    <Card
+                        key={selectedCities[index].timezone}
+                        className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background"
+                    >
+                        <CardHeader>
+                            <div className="flex justify-between items-center">
+                                <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
+                                    {city.city}
+                                </CardTitle>
+                                <p className="text-sm text-muted-foreground">
+                                    {city.offset}
+                                </p>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex justify-between items-center">
+                                <h1 className="text-4xl font-normal tracking-tight">
+                                    {city.time}
+                                </h1>
+                                <p className="text-sm text-muted-foreground">
+                                    {city.period}
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
         </div>
     );
