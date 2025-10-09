@@ -68,7 +68,7 @@ export async function POST(request: Request) {
                             text: { content: contact },
                         },
                     ],
-                }
+                },
             },
         });
 
@@ -78,7 +78,12 @@ export async function POST(request: Request) {
         );
     } catch (error) {
         // Capture detailed Notion error info for easier debugging locally
-        const err = error as unknown as { status?: number; code?: string; message?: string; body?: unknown };
+        const err = error as unknown as {
+            status?: number;
+            code?: string;
+            message?: string;
+            body?: unknown;
+        };
         // eslint-disable-next-line no-console
         console.error("Failed to create Notion page", {
             status: err?.status,
@@ -91,16 +96,14 @@ export async function POST(request: Request) {
         const clientMessage = isProd
             ? { error: "Failed to create Notion page" }
             : {
-                    error: "Failed to create Notion page",
-                    details: {
-                        status: err?.status,
-                        code: err?.code,
-                        message: err?.message,
-                    },
-                };
+                  error: "Failed to create Notion page",
+                  details: {
+                      status: err?.status,
+                      code: err?.code,
+                      message: err?.message,
+                  },
+              };
 
         return NextResponse.json(clientMessage, { status: 500 });
     }
 }
-
-

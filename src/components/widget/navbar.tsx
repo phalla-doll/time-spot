@@ -46,17 +46,26 @@ export default function Navbar() {
             const res = await fetch("/api/notion", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: name.trim(), contact: contact.trim() }),
+                body: JSON.stringify({
+                    name: name.trim(),
+                    contact: contact.trim(),
+                }),
             });
             if (!res.ok) {
-                const data = (await res.json().catch(() => ({ error: "Unknown error" }))) as { error?: string };
+                const data = (await res
+                    .json()
+                    .catch(() => ({ error: "Unknown error" }))) as {
+                    error?: string;
+                };
                 throw new Error(data.error || `Request failed (${res.status})`);
             }
             setSubmitSuccess(true);
             setName("");
             setContact("");
         } catch (err) {
-            setSubmitError(err instanceof Error ? err.message : "Failed to submit");
+            setSubmitError(
+                err instanceof Error ? err.message : "Failed to submit",
+            );
         } finally {
             setSubmitting(false);
         }
@@ -127,7 +136,9 @@ export default function Navbar() {
                                             type="text"
                                             placeholder="Enter your name"
                                             value={name}
-                                            onChange={(e) => setName(e.target.value)}
+                                            onChange={(e) =>
+                                                setName(e.target.value)
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col gap-1.5">
@@ -136,21 +147,33 @@ export default function Navbar() {
                                             type="text"
                                             placeholder="Enter your contact"
                                             value={contact}
-                                            onChange={(e) => setContact(e.target.value)}
+                                            onChange={(e) =>
+                                                setContact(e.target.value)
+                                            }
                                         />
                                         <p className="text-xs text-muted-foreground">
                                             Contact can be email, telegram, etc.
                                         </p>
                                     </div>
                                     {submitError ? (
-                                        <p className="text-xs text-destructive">{submitError}</p>
+                                        <p className="text-xs text-destructive">
+                                            {submitError}
+                                        </p>
                                     ) : null}
                                     {submitSuccess ? (
-                                        <p className="text-xs text-emerald-600">Thanks! We received your info.</p>
+                                        <p className="text-xs text-emerald-600">
+                                            Thanks! We received your info.
+                                        </p>
                                     ) : null}
                                 </div>
-                                <Button variant="default" onClick={handleSubmit} disabled={submitting}>
-                                    {submitting && <Spinner className="size-4" />}
+                                <Button
+                                    variant="default"
+                                    onClick={handleSubmit}
+                                    disabled={submitting}
+                                >
+                                    {submitting && (
+                                        <Spinner className="size-4" />
+                                    )}
                                     {submitting ? "Submitting..." : "Submit"}
                                 </Button>
                             </div>
