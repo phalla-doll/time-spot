@@ -50,12 +50,12 @@ export default function MiniTime() {
         try {
             const saved =
                 typeof window !== "undefined"
-                    ? localStorage.getItem("timeFormat")
+                    ? localStorage.getItem("TIME_FORMAT")
                     : null;
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
             }
-        } catch {}
+        } catch { }
     }, []);
 
     // Listen for timezone and time format changes
@@ -72,7 +72,7 @@ export default function MiniTime() {
             if (e.key === "ACTIVE_TIME_ZONE" && e.newValue) {
                 setActiveTimezone(e.newValue);
             }
-            if (e.key === "timeFormat" && e.newValue) {
+            if (e.key === "TIME_FORMAT" && e.newValue) {
                 if (e.newValue === "12h" || e.newValue === "24h") {
                     setTimeFormat(e.newValue);
                 }
@@ -140,6 +140,24 @@ export default function MiniTime() {
     const userPeriod =
         userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
+    // Handle timezone change when clicking on a city card
+    const handleTimezoneChange = (newTimezone: string) => {
+        if (newTimezone !== activeTimezone) {
+            setActiveTimezone(newTimezone);
+            try {
+                if (typeof window !== "undefined") {
+                    localStorage.setItem("ACTIVE_TIME_ZONE", newTimezone);
+                    // Dispatch custom event to notify other components
+                    window.dispatchEvent(
+                        new CustomEvent("timezoneChanged", {
+                            detail: newTimezone,
+                        }),
+                    );
+                }
+            } catch { }
+        }
+    };
+
     // Create unified array with user's current city as first item
     const favoriteCities = [
         {
@@ -170,7 +188,8 @@ export default function MiniTime() {
                 {favoriteCities.map((city) => (
                     <Card
                         key={city.timezone}
-                        className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background"
+                        className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background cursor-pointer transition-colors"
+                        onClick={() => handleTimezoneChange(city.timezone)}
                     >
                         <CardHeader>
                             <div className="flex justify-between items-center">

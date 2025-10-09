@@ -34,7 +34,7 @@ export default function MainTime() {
         try {
             const saved =
                 typeof window !== "undefined"
-                    ? localStorage.getItem("timeFormat")
+                    ? localStorage.getItem("TIME_FORMAT")
                     : null;
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
@@ -45,7 +45,7 @@ export default function MainTime() {
     useEffect(() => {
         try {
             if (typeof window !== "undefined") {
-                localStorage.setItem("timeFormat", timeFormat);
+                localStorage.setItem("TIME_FORMAT", timeFormat);
                 // Dispatch custom event to notify other components
                 window.dispatchEvent(
                     new CustomEvent("timeFormatChanged", {
