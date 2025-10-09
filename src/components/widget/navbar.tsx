@@ -16,6 +16,7 @@ import {
 import ThemeSwitcher from "@/components/widget/theme-switcher";
 import TimezoneSearch from "@/components/widget/timezone-search";
 import { Input } from "@/components/ui/input";
+import { Label } from "../ui/label";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -85,14 +86,24 @@ export default function Navbar() {
                                 </DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-2">
-                                <div className="flex flex-col gap-1">
-                                    <Input
-                                        type="text"
-                                        placeholder="Enter your contact"
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        Contact can be email, telegram, etc.
-                                    </p>
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-1.5">
+                                        <Label>Name</Label>
+                                        <Input
+                                            type="text"
+                                            placeholder="Enter your name"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1.5">
+                                        <Label>Contact</Label>
+                                        <Input
+                                            type="text"
+                                            placeholder="Enter your contact"
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Contact can be email, telegram, etc.
+                                        </p>
+                                    </div>
                                 </div>
                                 <Button variant="default">Submit</Button>
                             </div>
