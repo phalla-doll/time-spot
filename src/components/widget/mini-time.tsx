@@ -20,7 +20,8 @@ export default function MiniTime() {
                 const favRaw = localStorage.getItem("FAVORITE_CITIES");
                 if (favRaw) {
                     const favs = JSON.parse(favRaw);
-                    if (Array.isArray(favs) && favs.length > 0) return favs[0] as string;
+                    if (Array.isArray(favs) && favs.length > 0)
+                        return favs[0] as string;
                 }
             } catch {}
         }
@@ -82,7 +83,8 @@ export default function MiniTime() {
                     ...defaultCities.map((c) => c.timezone),
                 ];
                 const unique = Array.from(new Set([...arr, ...defaults]));
-                if (unique.length < 4 && !unique.includes("UTC")) unique.push("UTC");
+                if (unique.length < 4 && !unique.includes("UTC"))
+                    unique.push("UTC");
                 return unique.slice(0, 4);
             };
 
@@ -94,7 +96,10 @@ export default function MiniTime() {
             }
             // Start with system + defaults if empty
             if (initial.length === 0) {
-                initial = ensureFour([systemTimezone, ...defaultCities.map((c) => c.timezone)]);
+                initial = ensureFour([
+                    systemTimezone,
+                    ...defaultCities.map((c) => c.timezone),
+                ]);
             } else {
                 initial = ensureFour(initial);
             }
@@ -123,14 +128,16 @@ export default function MiniTime() {
             if (e.key === "FAVORITE_CITIES" && e.newValue) {
                 try {
                     const favs = JSON.parse(e.newValue);
-                    if (Array.isArray(favs) && favs.length > 0) setActiveTimezone(favs[0]);
+                    if (Array.isArray(favs) && favs.length > 0)
+                        setActiveTimezone(favs[0]);
                 } catch {}
             }
         };
 
         const handleFavoritesChanged = (e: CustomEvent) => {
             const favs = e.detail;
-            if (Array.isArray(favs) && favs.length > 0) setActiveTimezone(favs[0]);
+            if (Array.isArray(favs) && favs.length > 0)
+                setActiveTimezone(favs[0]);
         };
 
         if (typeof window !== "undefined") {
@@ -212,20 +219,29 @@ export default function MiniTime() {
         try {
             if (typeof window !== "undefined") {
                 const currentFavsRaw = localStorage.getItem("FAVORITE_CITIES");
-                const currentFavs: string[] = Array.isArray(currentFavsRaw ? JSON.parse(currentFavsRaw) : null)
+                const currentFavs: string[] = Array.isArray(
+                    currentFavsRaw ? JSON.parse(currentFavsRaw) : null,
+                )
                     ? (JSON.parse(currentFavsRaw as string) as string[])
                     : favoriteTimezones;
-                const next = [newTimezone, ...currentFavs.filter((tz) => tz !== newTimezone)];
+                const next = [
+                    newTimezone,
+                    ...currentFavs.filter((tz) => tz !== newTimezone),
+                ];
                 // Ensure we still have 4 unique items, filling from defaults/UTC if needed
                 const defaults = [
                     systemTimezone,
                     ...defaultCities.map((c) => c.timezone),
                 ];
                 const unique = Array.from(new Set([...next, ...defaults]));
-                if (unique.length < 4 && !unique.includes("UTC")) unique.push("UTC");
+                if (unique.length < 4 && !unique.includes("UTC"))
+                    unique.push("UTC");
                 const trimmed = unique.slice(0, 4);
                 setFavoriteTimezones(trimmed);
-                localStorage.setItem("FAVORITE_CITIES", JSON.stringify(trimmed));
+                localStorage.setItem(
+                    "FAVORITE_CITIES",
+                    JSON.stringify(trimmed),
+                );
                 window.dispatchEvent(
                     new CustomEvent("favoritesChanged", { detail: trimmed }),
                 );

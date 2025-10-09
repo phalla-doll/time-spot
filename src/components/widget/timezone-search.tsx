@@ -51,7 +51,9 @@ export default function TimezoneSearch({
     const handleTimezoneSelect = (timezone: string) => {
         try {
             const raw = localStorage.getItem("FAVORITE_CITIES");
-            const current: string[] = Array.isArray(raw ? JSON.parse(raw) : null)
+            const current: string[] = Array.isArray(
+                raw ? JSON.parse(raw) : null,
+            )
                 ? (JSON.parse(raw as string) as string[])
                 : [];
             // Remove duplicate if exists, then unshift selected
