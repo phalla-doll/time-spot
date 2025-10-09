@@ -1,10 +1,10 @@
 "use client";
 
+import { SearchIcon } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import TimezoneSearch from "./timezone-search";
-import { useState } from "react";
-import { SearchIcon } from "lucide-react";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
