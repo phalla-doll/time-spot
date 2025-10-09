@@ -18,7 +18,9 @@ export default function MiniTime() {
     const [systemTimezone, setSystemTimezone] = useState<string>("UTC");
     const [activeTimezone, setActiveTimezone] = useState<string>(() => "UTC");
 
-    const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now().setZone("UTC"));
+    const [currentTime, setCurrentTime] = useState<DateTime>(
+        DateTime.now().setZone("UTC"),
+    );
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
 
     // Favorite timezones persisted in localStorage (array of timezone strings)
@@ -52,7 +54,10 @@ export default function MiniTime() {
         } catch {}
 
         try {
-            const favRaw = typeof window !== "undefined" ? localStorage.getItem("FAVORITE_CITIES") : null;
+            const favRaw =
+                typeof window !== "undefined"
+                    ? localStorage.getItem("FAVORITE_CITIES")
+                    : null;
             if (favRaw) {
                 const favs = JSON.parse(favRaw);
                 if (Array.isArray(favs) && favs.length > 0) {
@@ -264,7 +269,10 @@ export default function MiniTime() {
     return (
         <div className="container mx-4 sm:mx-auto my-15">
             <div className="flex justify-between items-center mb-10">
-                <h1 className="text-2xl sm:text-4xl font-medium tracking-tight" suppressHydrationWarning>
+                <h1
+                    className="text-2xl sm:text-4xl font-medium tracking-tight"
+                    suppressHydrationWarning
+                >
                     {mounted ? formatTimezoneDisplay(activeTimezone) : ""}
                 </h1>
                 <Button variant="ghost" size="sm">
@@ -278,24 +286,38 @@ export default function MiniTime() {
                           <Card
                               key={city.timezone}
                               className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background cursor-pointer transition-colors"
-                              onClick={() => handleTimezoneChange(city.timezone)}
+                              onClick={() =>
+                                  handleTimezoneChange(city.timezone)
+                              }
                           >
                               <CardHeader>
                                   <div className="flex justify-between items-center">
-                                      <CardTitle className="text-lg sm:text-xl font-medium tracking-tight" suppressHydrationWarning>
+                                      <CardTitle
+                                          className="text-lg sm:text-xl font-medium tracking-tight"
+                                          suppressHydrationWarning
+                                      >
                                           {city.city}
                                       </CardTitle>
-                                      <p className="text-sm text-muted-foreground" suppressHydrationWarning>
+                                      <p
+                                          className="text-sm text-muted-foreground"
+                                          suppressHydrationWarning
+                                      >
                                           {city.offset}
                                       </p>
                                   </div>
                               </CardHeader>
                               <CardContent>
                                   <div className="flex justify-between items-center">
-                                      <h1 className="text-4xl font-normal tracking-tight" suppressHydrationWarning>
+                                      <h1
+                                          className="text-4xl font-normal tracking-tight"
+                                          suppressHydrationWarning
+                                      >
                                           {city.time}
                                       </h1>
-                                      <p className="text-sm text-muted-foreground" suppressHydrationWarning>
+                                      <p
+                                          className="text-sm text-muted-foreground"
+                                          suppressHydrationWarning
+                                      >
                                           {city.period}
                                       </p>
                                   </div>

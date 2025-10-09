@@ -16,14 +16,18 @@ export default function MainTime() {
         setMounted(true);
         // Determine initial timezone on client: favorites -> browser -> UTC
         try {
-            const favRaw = typeof window !== "undefined" ? localStorage.getItem("FAVORITE_CITIES") : null;
+            const favRaw =
+                typeof window !== "undefined"
+                    ? localStorage.getItem("FAVORITE_CITIES")
+                    : null;
             if (favRaw) {
                 const favs = JSON.parse(favRaw);
                 if (Array.isArray(favs) && favs.length > 0) {
                     setTimezone(favs[0] as string);
                 }
             } else if (typeof Intl !== "undefined") {
-                const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const browserTz =
+                    Intl.DateTimeFormat().resolvedOptions().timeZone;
                 if (browserTz) setTimezone(browserTz);
             }
         } catch {}
@@ -103,7 +107,10 @@ export default function MainTime() {
     return (
         <div className="mx-4 sm:mx-auto border-b border-gray">
             <div className="flex justify-center items-center my-20">
-                <h1 className="text-7xl sm:text-[18rem] lg:text-[26rem] font-bold tabular-nums tracking-tighter select-none" suppressHydrationWarning>
+                <h1
+                    className="text-7xl sm:text-[18rem] lg:text-[26rem] font-bold tabular-nums tracking-tighter select-none"
+                    suppressHydrationWarning
+                >
                     {mounted
                         ? timeFormat === "24h"
                             ? now.toFormat("HH:mm:ss")
@@ -115,12 +122,20 @@ export default function MainTime() {
                 <div className="flex justify-end items-center gap-x-6">
                     <div className="flex gap-2 text-sm sm:text-base">
                         <div className="flex flex-col">
-                            <span className="text-muted-foreground" suppressHydrationWarning>
-                                {mounted ? now.toLocaleString(DateTime.DATE_HUGE) : ""}
+                            <span
+                                className="text-muted-foreground"
+                                suppressHydrationWarning
+                            >
+                                {mounted
+                                    ? now.toLocaleString(DateTime.DATE_HUGE)
+                                    : ""}
                             </span>
                             <Weather />
                         </div>
-                        <span className="text-muted-foreground" suppressHydrationWarning>
+                        <span
+                            className="text-muted-foreground"
+                            suppressHydrationWarning
+                        >
                             {mounted ? now.toFormat("ZZZZ") : ""}
                         </span>
                     </div>
