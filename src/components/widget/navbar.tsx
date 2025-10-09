@@ -4,6 +4,7 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import ThemeSwitcher from "@/components/widget/theme-switcher";
 import TimezoneSearch from "@/components/widget/timezone-search";
 
 export default function Navbar() {
@@ -47,7 +48,8 @@ export default function Navbar() {
                         onTimezoneSelect={handleTimezoneSelect}
                     />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
+                    <ThemeSwitcher />
                     <Button size="sm" variant="outline">
                         Login
                     </Button>
