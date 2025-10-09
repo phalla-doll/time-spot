@@ -111,7 +111,7 @@ export default function MiniTime() {
         } catch {}
     }, [systemTimezone, defaultCities]);
 
-    // Listen for time format changes and keep activeTimezone in sync with favorites
+    // Listen for time format changes and keep favorites/activeTimezone in sync
     useEffect(() => {
         const handleTimeFormatChange = (e: CustomEvent) => {
             setTimeFormat(e.detail);
@@ -126,16 +126,20 @@ export default function MiniTime() {
             if (e.key === "FAVORITE_CITIES" && e.newValue) {
                 try {
                     const favs = JSON.parse(e.newValue);
-                    if (Array.isArray(favs) && favs.length > 0)
-                        setActiveTimezone(favs[0]);
+                    if (Array.isArray(favs)) {
+                        setFavoriteTimezones(favs);
+                        if (favs.length > 0) setActiveTimezone(favs[0]);
+                    }
                 } catch {}
             }
         };
 
         const handleFavoritesChanged = (e: CustomEvent) => {
             const favs = e.detail;
-            if (Array.isArray(favs) && favs.length > 0)
-                setActiveTimezone(favs[0]);
+            if (Array.isArray(favs)) {
+                setFavoriteTimezones(favs);
+                if (favs.length > 0) setActiveTimezone(favs[0]);
+            }
         };
 
         if (typeof window !== "undefined") {
