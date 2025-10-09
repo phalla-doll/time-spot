@@ -6,22 +6,28 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Weather from "@/components/widget/weather";
 
 export default function MainTime() {
-    const [timezone, setTimezone] = useState<string>(() => {
-        if (typeof window !== "undefined") {
-            try {
-                const favRaw = localStorage.getItem("FAVORITE_CITIES");
-                if (favRaw) {
-                    const favs = JSON.parse(favRaw);
-                    if (Array.isArray(favs) && favs.length > 0) {
-                        return favs[0] as string;
-                    }
-                }
-            } catch {}
-        }
-        return DateTime.now().zoneName;
-    });
-    const [now, setNow] = useState(() => DateTime.now().setZone(timezone));
+    // Avoid hydration mismatches by using stable SSR defaults, then update on mount
+    const [mounted, setMounted] = useState(false);
+    const [timezone, setTimezone] = useState<string>(() => "UTC");
+    const [now, setNow] = useState(() => DateTime.now().setZone("UTC"));
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
+
+    useEffect(() => {
+        setMounted(true);
+        // Determine initial timezone on client: favorites -> browser -> UTC
+        try {
+            const favRaw = typeof window !== "undefined" ? localStorage.getItem("FAVORITE_CITIES") : null;
+            if (favRaw) {
+                const favs = JSON.parse(favRaw);
+                if (Array.isArray(favs) && favs.length > 0) {
+                    setTimezone(favs[0] as string);
+                }
+            } else if (typeof Intl !== "undefined") {
+                const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (browserTz) setTimezone(browserTz);
+            }
+        } catch {}
+    }, []);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -97,23 +103,25 @@ export default function MainTime() {
     return (
         <div className="mx-4 sm:mx-auto border-b border-gray">
             <div className="flex justify-center items-center my-20">
-                <h1 className="text-7xl sm:text-[18rem] lg:text-[26rem] font-bold tabular-nums tracking-tighter select-none">
-                    {timeFormat === "24h"
-                        ? now.toFormat("HH:mm:ss")
-                        : now.toFormat("hh:mm:ss")}
+                <h1 className="text-7xl sm:text-[18rem] lg:text-[26rem] font-bold tabular-nums tracking-tighter select-none" suppressHydrationWarning>
+                    {mounted
+                        ? timeFormat === "24h"
+                            ? now.toFormat("HH:mm:ss")
+                            : now.toFormat("hh:mm:ss")
+                        : "--:--:--"}
                 </h1>
             </div>
             <div className="container mx-4 sm:mx-auto mb-10">
                 <div className="flex justify-end items-center gap-x-6">
                     <div className="flex gap-2 text-sm sm:text-base">
                         <div className="flex flex-col">
-                            <span className="text-muted-foreground">
-                                {now.toLocaleString(DateTime.DATE_HUGE)}
+                            <span className="text-muted-foreground" suppressHydrationWarning>
+                                {mounted ? now.toLocaleString(DateTime.DATE_HUGE) : ""}
                             </span>
                             <Weather />
                         </div>
-                        <span className="text-muted-foreground">
-                            {now.toFormat("ZZZZ")}
+                        <span className="text-muted-foreground" suppressHydrationWarning>
+                            {mounted ? now.toFormat("ZZZZ") : ""}
                         </span>
                     </div>
                     <div>
