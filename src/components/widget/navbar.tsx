@@ -4,28 +4,12 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
 import ThemeSwitcher from "@/components/widget/theme-switcher";
 import TimezoneSearch from "@/components/widget/timezone-search";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+import ContactDialog from "@/components/widget/contact-dialog";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const [name, setName] = useState("");
-    const [contact, setContact] = useState("");
-    const [submitting, setSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState<string | null>(null);
-    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     const handleTimezoneSelect = (timezone: string) => {
         // Trigger a custom event to notify other components
@@ -34,42 +18,7 @@ export default function Navbar() {
         );
     };
 
-    const handleSubmit = async () => {
-        setSubmitError(null);
-        setSubmitSuccess(false);
-        if (!name.trim() || !contact.trim()) {
-            setSubmitError("Please fill in both fields.");
-            return;
-        }
-        setSubmitting(true);
-        try {
-            const res = await fetch("/api/notion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: name.trim(),
-                    contact: contact.trim(),
-                }),
-            });
-            if (!res.ok) {
-                const data = (await res
-                    .json()
-                    .catch(() => ({ error: "Unknown error" }))) as {
-                    error?: string;
-                };
-                throw new Error(data.error || `Request failed (${res.status})`);
-            }
-            setSubmitSuccess(true);
-            setName("");
-            setContact("");
-        } catch (err) {
-            setSubmitError(
-                err instanceof Error ? err.message : "Failed to submit",
-            );
-        } finally {
-            setSubmitting(false);
-        }
-    };
+    // submit logic and dialog UI moved into ContactDialog component
 
     return (
         <div className="container mx-auto">
@@ -111,80 +60,7 @@ export default function Navbar() {
                 </div>
                 <div className="flex gap-2 items-center">
                     <ThemeSwitcher />
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size="sm" variant="default">
-                                Register / Log in
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                                <DialogTitle>
-                                    Interested in Time Spot?
-                                </DialogTitle>
-                                <DialogDescription>
-                                    This is a experimental project. If you are
-                                    interested in Time Spot, please use this
-                                    form to contact us.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-2">
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex flex-col gap-1.5">
-                                        <Label>Name</Label>
-                                        <Input
-                                            type="text"
-                                            placeholder="Enter your name"
-                                            value={name}
-                                            onChange={(e) =>
-                                                setName(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-1.5">
-                                        <Label>Contact</Label>
-                                        <Input
-                                            type="text"
-                                            placeholder="Enter your contact"
-                                            value={contact}
-                                            onChange={(e) =>
-                                                setContact(e.target.value)
-                                            }
-                                        />
-                                        <p className="text-xs text-muted-foreground">
-                                            Contact can be email, telegram, etc.
-                                        </p>
-                                    </div>
-                                    {submitError ? (
-                                        <p className="text-xs text-destructive">
-                                            {submitError}
-                                        </p>
-                                    ) : null}
-                                    {submitSuccess ? (
-                                        <p className="text-xs text-emerald-600">
-                                            Thanks! We received your info.
-                                        </p>
-                                    ) : null}
-                                </div>
-                                <Button
-                                    variant="default"
-                                    onClick={handleSubmit}
-                                    disabled={submitting}
-                                >
-                                    {submitting && (
-                                        <Spinner className="size-4" />
-                                    )}
-                                    {submitting ? "Submitting..." : "Submit"}
-                                </Button>
-                            </div>
-                            <DialogFooter className="sm:justify-start">
-                                <p className="text-xs text-muted-foreground">
-                                    By continuing, you agree to our Terms and
-                                    Privacy Policy.
-                                </p>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                    <ContactDialog />
                 </div>
             </div>
         </div>
