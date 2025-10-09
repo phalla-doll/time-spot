@@ -1,10 +1,11 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { CornerDownRight } from "lucide-react";
 import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import TimezoneSearch from "./timezone-search";
 
 interface CityTimezone {
     timezone: string;
@@ -17,7 +18,7 @@ export default function MiniTime() {
     // Persist user's system timezone so it always appears in the list (stable SSR default)
     const [systemTimezone, setSystemTimezone] = useState<string>("UTC");
     const [activeTimezone, setActiveTimezone] = useState<string>(() => "UTC");
-
+    const [isOpen, setIsOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState<DateTime>(
         DateTime.now().setZone("UTC"),
     );
@@ -305,10 +306,14 @@ export default function MiniTime() {
                 >
                     {mounted ? formatTimezoneDisplay(activeTimezone) : ""}
                 </h1>
-                <Button variant="ghost" size="sm">
-                    <PlusIcon className="size-4" />
-                    Add city
+                <Button variant="ghost" size="sm" onClick={() => setIsOpen(true)}>
+                    <CornerDownRight className="size-4" />
+                    Change city
                 </Button>
+                <TimezoneSearch
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                    />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {mounted && favoriteCities.length > 0
