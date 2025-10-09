@@ -112,17 +112,19 @@ export default function TimezoneSearch({
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>
                         Local:{" "}
-                        <span
+                        <button
+                            type="button"
                             onClick={() =>
                                 handleTimezoneSelect(
                                     Intl.DateTimeFormat().resolvedOptions()
                                         .timeZone,
                                 )
                             }
-                            className="font-medium hover:underline cursor-pointer"
+                            className="font-medium hover:underline cursor-pointer bg-transparent p-0 m-0"
+                            aria-label="Select local timezone"
                         >
                             {DateTime.now().toFormat("ZZZZ")}
-                        </span>
+                        </button>
                     </span>
                 </div>
             </div>
