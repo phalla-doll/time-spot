@@ -3,7 +3,7 @@
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import Weather from "./weather";
+import Weather from "@/components/widget/weather";
 
 export default function MainTime() {
     const [now, setNow] = useState(DateTime.now());
