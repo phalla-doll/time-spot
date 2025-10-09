@@ -1,4 +1,5 @@
 import { SearchIcon } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
@@ -6,7 +7,14 @@ export default function Navbar() {
         <div className="container mx-auto">
             <div className="flex justify-between items-center p-4">
                 <div className="">
-                    <h1 className="text-xl font-bold tracking-tight">
+                    <h1 className="text-xl font-semibold tracking-tight flex items-center gap-2">
+                        <Image
+                            src={"/logo/timespot-logo.svg"}
+                            width={24}
+                            height={24}
+                            alt="TimeSpot Logo"
+                            className="h-5 w-auto"
+                        ></Image>
                         Time Spot
                     </h1>
                 </div>
