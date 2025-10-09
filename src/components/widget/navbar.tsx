@@ -16,7 +16,7 @@ import {
 import ThemeSwitcher from "@/components/widget/theme-switcher";
 import TimezoneSearch from "@/components/widget/timezone-search";
 import { Input } from "@/components/ui/input";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
