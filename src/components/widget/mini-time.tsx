@@ -12,6 +12,8 @@ interface CityTimezone {
 }
 
 export default function MiniTime() {
+    // Persist user's system timezone so it always appears in the list
+    const [systemTimezone] = useState<string>(DateTime.now().zoneName);
     const [activeTimezone, setActiveTimezone] = useState<string>(() => {
         if (typeof window !== "undefined") {
             try {
@@ -30,7 +32,7 @@ export default function MiniTime() {
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
 
     // Default cities - can be customized by user
-    const [selectedCities] = useState<CityTimezone[]>([
+    const [defaultCities] = useState<CityTimezone[]>([
         { timezone: "Asia/Tokyo", displayName: "Tokyo" },
         { timezone: "America/New_York", displayName: "New York" },
         { timezone: "Europe/Paris", displayName: "Paris" },
@@ -129,6 +131,15 @@ export default function MiniTime() {
         };
     };
 
+    const getDisplayNameForTimezone = (timezone: string) => {
+        const found = defaultCities.find((c) => c.timezone === timezone);
+        if (found) return found.displayName;
+        const parts = timezone.split("/");
+        return parts.length >= 2
+            ? parts[parts.length - 1].replace(/_/g, " ")
+            : timezone;
+    };
+
     // Get current user timezone info
     const userTimezone = currentTime.setZone(activeTimezone);
     const userCity = formatTimezoneDisplay(activeTimezone).split(", ")[0];
@@ -158,20 +169,26 @@ export default function MiniTime() {
         }
     };
 
-    // Create unified array with user's current city as first item
-    const favoriteCities = [
-        {
-            city: userCity,
-            offset: userOffset,
-            time: userTime,
-            period: userPeriod,
-            timezone: activeTimezone,
-        },
-        ...selectedCities.map((city) => ({
-            ...getTimezoneData(city.timezone, city.displayName),
-            timezone: city.timezone,
-        })),
-    ];
+    // Create unified array with active city first, ensure 4 unique cities total
+    const uniqueTimezones = Array.from(
+        new Set([
+            activeTimezone,
+            systemTimezone,
+            ...defaultCities.map((c) => c.timezone),
+        ]),
+    );
+
+    // Ensure we always have 4 items; add UTC as a neutral fallback if needed
+    if (uniqueTimezones.length < 4) {
+        if (!uniqueTimezones.includes("UTC")) {
+            uniqueTimezones.push("UTC");
+        }
+    }
+
+    const favoriteCities = uniqueTimezones.slice(0, 4).map((tz) => ({
+        ...getTimezoneData(tz, getDisplayNameForTimezone(tz)),
+        timezone: tz,
+    }));
 
     return (
         <div className="container mx-4 sm:mx-auto my-15">
