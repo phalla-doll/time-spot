@@ -100,11 +100,14 @@ export default function TimezoneSearch({
                     ))}
                 </CommandGroup>
             </CommandList>
-            <div className="p-2 flex justify-start items-center border-t">
+            <div className="p-2 flex justify-between items-center border-t">
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span className="hidden sm:block">Use ↑↓ to navigate</span>
+                    <span className="hidden sm:block">•</span>
+                    <span className="hidden sm:block">Press Enter to select</span>
+                </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>Use ↑↓ to navigate</span>
-                    <span>•</span>
-                    <span>Press Enter to select</span>
+                    <span>Local: {DateTime.now().toFormat("ZZZZ")}</span>
                 </div>
             </div>
         </CommandDialog>
