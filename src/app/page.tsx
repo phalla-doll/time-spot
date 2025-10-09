@@ -5,10 +5,12 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "World Clock - Track Time Across Multiple Time Zones",
-    description: "Real-time world clock showing current time in multiple cities. Track time zones for Phnom Penh, Los Angeles, London, Singapore and more. Perfect for remote teams and international coordination.",
+    description:
+        "Real-time world clock showing current time in multiple cities. Track time zones for Phnom Penh, Los Angeles, London, Singapore and more. Perfect for remote teams and international coordination.",
     openGraph: {
         title: "World Clock - Track Time Across Multiple Time Zones | TimeSpot",
-        description: "Real-time world clock showing current time in multiple cities. Track time zones for remote teams and international coordination.",
+        description:
+            "Real-time world clock showing current time in multiple cities. Track time zones for remote teams and international coordination.",
     },
 };
 

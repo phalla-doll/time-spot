@@ -16,9 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
     title: {
         default: "TimeSpot - World Clock & Time Zone Converter",
-        template: "%s | TimeSpot"
+        template: "%s | TimeSpot",
     },
-    description: "Track time across multiple time zones with TimeSpot. A beautiful world clock app featuring real-time updates, weather information, and support for cities worldwide. Perfect for remote teams and global travelers.",
+    description:
+        "Track time across multiple time zones with TimeSpot. A beautiful world clock app featuring real-time updates, weather information, and support for cities worldwide. Perfect for remote teams and global travelers.",
     keywords: [
         "world clock",
         "time zones",
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
         "clock app",
         "time zone converter",
         "international time",
-        "remote work tools"
+        "remote work tools",
     ],
     authors: [{ name: "TimeSpot" }],
     creator: "TimeSpot",
@@ -39,13 +40,16 @@ export const metadata: Metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+    metadataBase: new URL(
+        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    ),
     alternates: {
         canonical: "/",
     },
     openGraph: {
         title: "TimeSpot - World Clock & Time Zone Converter",
-        description: "Track time across multiple time zones with TimeSpot. A beautiful world clock app featuring real-time updates, weather information, and support for cities worldwide.",
+        description:
+            "Track time across multiple time zones with TimeSpot. A beautiful world clock app featuring real-time updates, weather information, and support for cities worldwide.",
         url: "/",
         siteName: "TimeSpot",
         locale: "en_US",
@@ -62,7 +66,8 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "TimeSpot - World Clock & Time Zone Converter",
-        description: "Track time across multiple time zones with TimeSpot. Beautiful world clock with real-time updates and weather info.",
+        description:
+            "Track time across multiple time zones with TimeSpot. Beautiful world clock with real-time updates and weather info.",
         images: ["/og-image.png"],
     },
     robots: {
