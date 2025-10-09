@@ -104,7 +104,9 @@ export default function TimezoneSearch({
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <span className="hidden sm:block">Use ↑↓ to navigate</span>
                     <span className="hidden sm:block">•</span>
-                    <span className="hidden sm:block">Press Enter to select</span>
+                    <span className="hidden sm:block">
+                        Press Enter to select
+                    </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>Local: {DateTime.now().toFormat("ZZZZ")}</span>
