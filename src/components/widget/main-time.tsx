@@ -108,7 +108,7 @@ export default function MainTime() {
         <div className="mx-4 sm:mx-auto border-b border-gray">
             <div className="flex justify-center items-center my-20">
                 <h1
-                    className="text-7xl sm:text-[18rem] lg:text-[26rem] font-bold tabular-nums tracking-tighter select-none"
+                    className="text-8xl sm:text-[16rem] lg:text-[26rem] font-bold tabular-nums tracking-tighter select-none"
                     suppressHydrationWarning
                 >
                     {mounted
