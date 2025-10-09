@@ -17,19 +17,31 @@ export default function MiniTime() {
     const [activeTimezone, setActiveTimezone] = useState<string>(() => {
         if (typeof window !== "undefined") {
             try {
-                return (
-                    localStorage.getItem("ACTIVE_TIME_ZONE") ||
-                    DateTime.now().zoneName
-                );
-            } catch {
-                return DateTime.now().zoneName;
-            }
+                const favRaw = localStorage.getItem("FAVORITE_CITIES");
+                if (favRaw) {
+                    const favs = JSON.parse(favRaw);
+                    if (Array.isArray(favs) && favs.length > 0) return favs[0] as string;
+                }
+            } catch {}
         }
         return DateTime.now().zoneName;
     });
 
     const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
+
+    // Favorite timezones persisted in localStorage (array of timezone strings)
+    const [favoriteTimezones, setFavoriteTimezones] = useState<string[]>(() => {
+        if (typeof window === "undefined") return [];
+        try {
+            const raw = localStorage.getItem("FAVORITE_CITIES");
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) return parsed as string[];
+            }
+        } catch {}
+        return [];
+    });
 
     // Default cities - can be customized by user
     const [defaultCities] = useState<CityTimezone[]>([
@@ -60,46 +72,86 @@ export default function MiniTime() {
         } catch {}
     }, []);
 
-    // Listen for timezone and time format changes
+    // Initialize FAVORITE_CITIES on first load or normalize existing
     useEffect(() => {
-        const handleTimezoneChange = (e: CustomEvent) => {
-            setActiveTimezone(e.detail);
-        };
+        if (typeof window === "undefined") return;
+        try {
+            const ensureFour = (arr: string[]) => {
+                const defaults = [
+                    systemTimezone,
+                    ...defaultCities.map((c) => c.timezone),
+                ];
+                const unique = Array.from(new Set([...arr, ...defaults]));
+                if (unique.length < 4 && !unique.includes("UTC")) unique.push("UTC");
+                return unique.slice(0, 4);
+            };
 
+            const raw = localStorage.getItem("FAVORITE_CITIES");
+            let initial = [] as string[];
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) initial = parsed as string[];
+            }
+            // Start with system + defaults if empty
+            if (initial.length === 0) {
+                initial = ensureFour([systemTimezone, ...defaultCities.map((c) => c.timezone)]);
+            } else {
+                initial = ensureFour(initial);
+            }
+            setFavoriteTimezones(initial);
+            localStorage.setItem("FAVORITE_CITIES", JSON.stringify(initial));
+            window.dispatchEvent(
+                new CustomEvent("favoritesChanged", { detail: initial }),
+            );
+        } catch {}
+        // We want to run this once on mount using current defaults
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Listen for time format changes and keep activeTimezone in sync with favorites
+    useEffect(() => {
         const handleTimeFormatChange = (e: CustomEvent) => {
             setTimeFormat(e.detail);
         };
 
         const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === "ACTIVE_TIME_ZONE" && e.newValue) {
-                setActiveTimezone(e.newValue);
-            }
             if (e.key === "TIME_FORMAT" && e.newValue) {
                 if (e.newValue === "12h" || e.newValue === "24h") {
                     setTimeFormat(e.newValue);
                 }
             }
+            if (e.key === "FAVORITE_CITIES" && e.newValue) {
+                try {
+                    const favs = JSON.parse(e.newValue);
+                    if (Array.isArray(favs) && favs.length > 0) setActiveTimezone(favs[0]);
+                } catch {}
+            }
+        };
+
+        const handleFavoritesChanged = (e: CustomEvent) => {
+            const favs = e.detail;
+            if (Array.isArray(favs) && favs.length > 0) setActiveTimezone(favs[0]);
         };
 
         if (typeof window !== "undefined") {
             window.addEventListener(
-                "timezoneChanged",
-                handleTimezoneChange as EventListener,
-            );
-            window.addEventListener(
                 "timeFormatChanged",
                 handleTimeFormatChange as EventListener,
+            );
+            window.addEventListener(
+                "favoritesChanged",
+                handleFavoritesChanged as EventListener,
             );
             window.addEventListener("storage", handleStorageChange);
 
             return () => {
                 window.removeEventListener(
-                    "timezoneChanged",
-                    handleTimezoneChange as EventListener,
-                );
-                window.removeEventListener(
                     "timeFormatChanged",
                     handleTimeFormatChange as EventListener,
+                );
+                window.removeEventListener(
+                    "favoritesChanged",
+                    handleFavoritesChanged as EventListener,
                 );
                 window.removeEventListener("storage", handleStorageChange);
             };
@@ -155,37 +207,34 @@ export default function MiniTime() {
     const handleTimezoneChange = (newTimezone: string) => {
         if (newTimezone !== activeTimezone) {
             setActiveTimezone(newTimezone);
-            try {
-                if (typeof window !== "undefined") {
-                    localStorage.setItem("ACTIVE_TIME_ZONE", newTimezone);
-                    // Dispatch custom event to notify other components
-                    window.dispatchEvent(
-                        new CustomEvent("timezoneChanged", {
-                            detail: newTimezone,
-                        }),
-                    );
-                }
-            } catch {}
         }
+        // Reorder favorites so selected timezone is first
+        try {
+            if (typeof window !== "undefined") {
+                const currentFavsRaw = localStorage.getItem("FAVORITE_CITIES");
+                const currentFavs: string[] = Array.isArray(currentFavsRaw ? JSON.parse(currentFavsRaw) : null)
+                    ? (JSON.parse(currentFavsRaw as string) as string[])
+                    : favoriteTimezones;
+                const next = [newTimezone, ...currentFavs.filter((tz) => tz !== newTimezone)];
+                // Ensure we still have 4 unique items, filling from defaults/UTC if needed
+                const defaults = [
+                    systemTimezone,
+                    ...defaultCities.map((c) => c.timezone),
+                ];
+                const unique = Array.from(new Set([...next, ...defaults]));
+                if (unique.length < 4 && !unique.includes("UTC")) unique.push("UTC");
+                const trimmed = unique.slice(0, 4);
+                setFavoriteTimezones(trimmed);
+                localStorage.setItem("FAVORITE_CITIES", JSON.stringify(trimmed));
+                window.dispatchEvent(
+                    new CustomEvent("favoritesChanged", { detail: trimmed }),
+                );
+            }
+        } catch {}
     };
 
-    // Create unified array with active city first, ensure 4 unique cities total
-    const uniqueTimezones = Array.from(
-        new Set([
-            activeTimezone,
-            systemTimezone,
-            ...defaultCities.map((c) => c.timezone),
-        ]),
-    );
-
-    // Ensure we always have 4 items; add UTC as a neutral fallback if needed
-    if (uniqueTimezones.length < 4) {
-        if (!uniqueTimezones.includes("UTC")) {
-            uniqueTimezones.push("UTC");
-        }
-    }
-
-    const favoriteCities = uniqueTimezones.slice(0, 4).map((tz) => ({
+    // Derive display data from favorite timezones
+    const favoriteCities = favoriteTimezones.slice(0, 4).map((tz) => ({
         ...getTimezoneData(tz, getDisplayNameForTimezone(tz)),
         timezone: tz,
     }));

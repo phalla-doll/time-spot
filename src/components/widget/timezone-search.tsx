@@ -49,7 +49,22 @@ export default function TimezoneSearch({
     }, []);
 
     const handleTimezoneSelect = (timezone: string) => {
-        localStorage.setItem("ACTIVE_TIME_ZONE", timezone);
+        try {
+            const raw = localStorage.getItem("FAVORITE_CITIES");
+            const current: string[] = Array.isArray(raw ? JSON.parse(raw) : null)
+                ? (JSON.parse(raw as string) as string[])
+                : [];
+            // Remove duplicate if exists, then unshift selected
+            const without = current.filter((tz) => tz !== timezone);
+            const next = [timezone, ...without];
+            // Trim to 4 max entries (drop last)
+            const trimmed = next.slice(0, 4);
+            localStorage.setItem("FAVORITE_CITIES", JSON.stringify(trimmed));
+            // Notify listeners
+            window.dispatchEvent(
+                new CustomEvent("favoritesChanged", { detail: trimmed }),
+            );
+        } catch {}
         onTimezoneSelect?.(timezone);
         onOpenChange(false);
     };

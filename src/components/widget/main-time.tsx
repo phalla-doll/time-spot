@@ -9,13 +9,14 @@ export default function MainTime() {
     const [timezone, setTimezone] = useState<string>(() => {
         if (typeof window !== "undefined") {
             try {
-                return (
-                    localStorage.getItem("ACTIVE_TIME_ZONE") ||
-                    DateTime.now().zoneName
-                );
-            } catch {
-                return DateTime.now().zoneName;
-            }
+                const favRaw = localStorage.getItem("FAVORITE_CITIES");
+                if (favRaw) {
+                    const favs = JSON.parse(favRaw);
+                    if (Array.isArray(favs) && favs.length > 0) {
+                        return favs[0] as string;
+                    }
+                }
+            } catch {}
         }
         return DateTime.now().zoneName;
     });
@@ -56,29 +57,37 @@ export default function MainTime() {
         } catch {}
     }, [timeFormat]);
 
-    // Listen for timezone changes
+    // Listen for favorites changes
     useEffect(() => {
-        const handleTimezoneChange = (e: CustomEvent) => {
-            setTimezone(e.detail);
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === "FAVORITE_CITIES" && e.newValue) {
+                try {
+                    const favs = JSON.parse(e.newValue);
+                    if (Array.isArray(favs) && favs.length > 0) {
+                        setTimezone(favs[0]);
+                    }
+                } catch {}
+            }
         };
 
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === "ACTIVE_TIME_ZONE" && e.newValue) {
-                setTimezone(e.newValue);
+        const handleFavoritesChanged = (e: CustomEvent) => {
+            const favs = e.detail;
+            if (Array.isArray(favs) && favs.length > 0) {
+                setTimezone(favs[0]);
             }
         };
 
         if (typeof window !== "undefined") {
             window.addEventListener(
-                "timezoneChanged",
-                handleTimezoneChange as EventListener,
+                "favoritesChanged",
+                handleFavoritesChanged as EventListener,
             );
             window.addEventListener("storage", handleStorageChange);
 
             return () => {
                 window.removeEventListener(
-                    "timezoneChanged",
-                    handleTimezoneChange as EventListener,
+                    "favoritesChanged",
+                    handleFavoritesChanged as EventListener,
                 );
                 window.removeEventListener("storage", handleStorageChange);
             };
