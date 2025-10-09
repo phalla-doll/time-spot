@@ -332,10 +332,10 @@ export default function MiniTime() {
                               <CardHeader>
                                   <div className="flex justify-between items-center">
                                       <CardTitle className="text-lg sm:text-xl font-medium tracking-tight text-muted-foreground">
-                                           A0
+                                          N/A
                                       </CardTitle>
                                       <p className="text-sm text-muted-foreground">
-                                           A0
+                                          GMT
                                       </p>
                                   </div>
                               </CardHeader>
@@ -345,7 +345,7 @@ export default function MiniTime() {
                                           --:--
                                       </h1>
                                       <p className="text-sm text-muted-foreground">
-                                           A0
+                                          N/A
                                       </p>
                                   </div>
                               </CardContent>

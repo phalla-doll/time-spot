@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import MainTime from "@/components/widget/main-time";
 import MiniTime from "@/components/widget/mini-time";
 import Navbar from "@/components/widget/navbar";
+import Credits from "@/components/widget/credits";
 
 export const metadata: Metadata = {
     title: "World Clock - Track Time Across Multiple Time Zones",
@@ -23,6 +24,9 @@ export default function Home() {
             </section>
             <section aria-label="World time zones">
                 <MiniTime />
+            </section>
+            <section aria-label="Credits">
+                <Credits />
             </section>
         </main>
     );
