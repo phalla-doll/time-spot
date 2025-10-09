@@ -2,7 +2,7 @@
 
 import { PlusIcon } from "lucide-react";
 import { DateTime } from "luxon";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -46,6 +46,7 @@ export default function MiniTime() {
     // On mount, determine actual timezones and start the clock
     useEffect(() => {
         setMounted(true);
+        // Resolve browser timezone ASAP and persist to state
         try {
             const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
             if (browserTz) {
@@ -89,20 +90,36 @@ export default function MiniTime() {
         } catch {}
     }, []);
 
-    // Initialize FAVORITE_CITIES on first load or normalize existing
+    // Initialize FAVORITE_CITIES on first load or normalize existing (guarded)
+    const initFavoritesDoneRef = useRef(false);
     useEffect(() => {
         if (typeof window === "undefined") return;
+        if (initFavoritesDoneRef.current) return;
+        initFavoritesDoneRef.current = true;
         try {
-            const ensureFour = (arr: string[]) => {
+            const ensureFour = (arr: string[], detectedSystemTz: string) => {
                 const defaults = [
-                    systemTimezone,
+                    detectedSystemTz,
                     ...defaultCities.map((c) => c.timezone),
                 ];
-                const unique = Array.from(new Set([...arr, ...defaults]));
+                // Always prioritize detectedSystemTz first when normalizing
+                const withoutSystem = arr.filter(
+                    (tz) => tz !== detectedSystemTz,
+                );
+                const unique = Array.from(
+                    new Set([detectedSystemTz, ...withoutSystem, ...defaults]),
+                );
                 if (unique.length < 4 && !unique.includes("UTC"))
                     unique.push("UTC");
                 return unique.slice(0, 4);
             };
+
+            // Compute browser timezone locally to avoid re-runs when state updates
+            let detectedSystemTz = "UTC";
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (tz) detectedSystemTz = tz;
+            } catch {}
 
             const raw = localStorage.getItem("FAVORITE_CITIES");
             let initial = [] as string[];
@@ -110,22 +127,35 @@ export default function MiniTime() {
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed)) initial = parsed as string[];
             }
-            // Start with system + defaults if empty
+
+            // Only initialize if empty; otherwise, normalize minimally
             if (initial.length === 0) {
-                initial = ensureFour([
-                    systemTimezone,
-                    ...defaultCities.map((c) => c.timezone),
-                ]);
+                initial = ensureFour(
+                    [detectedSystemTz, ...defaultCities.map((c) => c.timezone)],
+                    detectedSystemTz,
+                );
             } else {
-                initial = ensureFour(initial);
+                // If first is UTC but we know system tz, promote it
+                if (
+                    initial[0] === "UTC" &&
+                    detectedSystemTz &&
+                    detectedSystemTz !== "UTC"
+                ) {
+                    initial = [
+                        detectedSystemTz,
+                        ...initial.filter((tz) => tz !== detectedSystemTz),
+                    ];
+                }
+                initial = ensureFour(initial, detectedSystemTz);
             }
+
             setFavoriteTimezones(initial);
             localStorage.setItem("FAVORITE_CITIES", JSON.stringify(initial));
             window.dispatchEvent(
                 new CustomEvent("favoritesChanged", { detail: initial }),
             );
         } catch {}
-    }, [systemTimezone, defaultCities]);
+    }, [defaultCities]);
 
     // Listen for time format changes and keep favorites/activeTimezone in sync
     useEffect(() => {
