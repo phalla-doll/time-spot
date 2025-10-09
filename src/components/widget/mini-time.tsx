@@ -55,7 +55,7 @@ export default function MiniTime() {
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
             }
-        } catch { }
+        } catch {}
     }, []);
 
     // Listen for timezone and time format changes
@@ -154,7 +154,7 @@ export default function MiniTime() {
                         }),
                     );
                 }
-            } catch { }
+            } catch {}
         }
     };
 
