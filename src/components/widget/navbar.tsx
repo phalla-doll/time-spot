@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -57,11 +57,15 @@ export default function Navbar() {
                 </div>
                 <div className="flex gap-2 items-center">
                     <ThemeSwitcher />
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" className="sm:hidden">
                         Login
                     </Button>
-                    <Button size="sm" variant="default">
+                    <Button size="sm" variant="default" className="sm:hidden">
                         Register
+                    </Button>
+                    <Button size="sm" variant="outline" className="sm:hidden">
+                        <UserRound className="size-4" />
+                        Login/Register
                     </Button>
                 </div>
             </div>
