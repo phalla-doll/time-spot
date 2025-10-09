@@ -306,14 +306,15 @@ export default function MiniTime() {
                 >
                     {mounted ? formatTimezoneDisplay(activeTimezone) : ""}
                 </h1>
-                <Button variant="ghost" size="sm" onClick={() => setIsOpen(true)}>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(true)}
+                >
                     <CornerDownRight className="size-4" />
                     Change city
                 </Button>
-                <TimezoneSearch
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
-                    />
+                <TimezoneSearch open={isOpen} onOpenChange={setIsOpen} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {mounted && favoriteCities.length > 0
