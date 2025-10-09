@@ -4,10 +4,18 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import TimezoneSearch from "./timezone-search";
+import TimezoneSearch from "@/components/widget/timezone-search";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+
+    const handleTimezoneSelect = (timezone: string) => {
+        // Trigger a custom event to notify other components
+        window.dispatchEvent(
+            new CustomEvent("timezoneChanged", { detail: timezone }),
+        );
+    };
+
     return (
         <div className="container mx-auto">
             <div className="flex justify-between items-center p-4">
@@ -33,7 +41,11 @@ export default function Navbar() {
                         <SearchIcon className="size-4" />
                         <span>Search</span>
                     </Button>
-                    <TimezoneSearch open={isOpen} onOpenChange={setIsOpen} />
+                    <TimezoneSearch
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                        onTimezoneSelect={handleTimezoneSelect}
+                    />
                 </div>
                 <div className="flex gap-4">
                     <Button size="sm" variant="outline">

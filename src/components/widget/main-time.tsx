@@ -6,16 +6,29 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Weather from "@/components/widget/weather";
 
 export default function MainTime() {
-    const [now, setNow] = useState(DateTime.now());
+    const [timezone, setTimezone] = useState<string>(() => {
+        if (typeof window !== "undefined") {
+            try {
+                return (
+                    localStorage.getItem("ACTIVE_TIME_ZONE") ||
+                    DateTime.now().zoneName
+                );
+            } catch {
+                return DateTime.now().zoneName;
+            }
+        }
+        return DateTime.now().zoneName;
+    });
+    const [now, setNow] = useState(() => DateTime.now().setZone(timezone));
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setNow(DateTime.now());
+            setNow(DateTime.now().setZone(timezone));
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [timezone]);
 
     useEffect(() => {
         try {
@@ -36,6 +49,35 @@ export default function MainTime() {
             }
         } catch {}
     }, [timeFormat]);
+
+    // Listen for timezone changes
+    useEffect(() => {
+        const handleTimezoneChange = (e: CustomEvent) => {
+            setTimezone(e.detail);
+        };
+
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === "ACTIVE_TIME_ZONE" && e.newValue) {
+                setTimezone(e.newValue);
+            }
+        };
+
+        if (typeof window !== "undefined") {
+            window.addEventListener(
+                "timezoneChanged",
+                handleTimezoneChange as EventListener,
+            );
+            window.addEventListener("storage", handleStorageChange);
+
+            return () => {
+                window.removeEventListener(
+                    "timezoneChanged",
+                    handleTimezoneChange as EventListener,
+                );
+                window.removeEventListener("storage", handleStorageChange);
+            };
+        }
+    }, []);
 
     return (
         <div className="mx-4 sm:mx-auto border-b border-gray">

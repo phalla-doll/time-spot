@@ -49,6 +49,7 @@ export default function TimezoneSearch({
     }, []);
 
     const handleTimezoneSelect = (timezone: string) => {
+        localStorage.setItem("ACTIVE_TIME_ZONE", timezone);
         onTimezoneSelect?.(timezone);
         onOpenChange(false);
     };
