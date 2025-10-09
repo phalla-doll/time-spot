@@ -297,8 +297,8 @@ export default function MiniTime() {
         : [];
 
     return (
-        <div className="container mx-4 sm:mx-auto my-15">
-            <div className="flex justify-between items-center mb-10">
+        <div className="container mx-2 sm:mx-auto my-15">
+            <div className="flex justify-between items-center mx-4 mb-10">
                 <h1
                     className="text-2xl sm:text-4xl font-medium tracking-tight"
                     suppressHydrationWarning
@@ -310,7 +310,7 @@ export default function MiniTime() {
                     Add city
                 </Button>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {mounted && favoriteCities.length > 0
                     ? favoriteCities.map((city) => (
                           <Card
