@@ -26,7 +26,7 @@ export default function MainTime() {
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
             }
-        } catch {}
+        } catch { }
     }, []);
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function MainTime() {
             if (typeof window !== "undefined") {
                 localStorage.setItem("timeFormat", timeFormat);
             }
-        } catch {}
+        } catch { }
     }, [timeFormat]);
 
     return (
@@ -65,14 +65,25 @@ export default function MainTime() {
                             value={timeFormat}
                             type="single"
                             variant="outline"
+                            className="bg-muted/50 p-1 rounded-md"
                             onValueChange={(val) => {
                                 if (val && (val === "24h" || val === "12h")) {
                                     setTimeFormat(val);
                                 }
                             }}
                         >
-                            <ToggleGroupItem value="24h">24H</ToggleGroupItem>
-                            <ToggleGroupItem value="12h">12H</ToggleGroupItem>
+                            <ToggleGroupItem
+                                value="24h"
+                                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-sm font-medium"
+                            >
+                                24H
+                            </ToggleGroupItem>
+                            <ToggleGroupItem
+                                value="12h"
+                                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-sm font-medium"
+                            >
+                                12H
+                            </ToggleGroupItem>
                         </ToggleGroup>
                     </div>
                 </div>
