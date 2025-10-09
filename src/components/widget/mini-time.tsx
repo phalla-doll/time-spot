@@ -12,23 +12,13 @@ interface CityTimezone {
 }
 
 export default function MiniTime() {
-    // Persist user's system timezone so it always appears in the list
-    const [systemTimezone] = useState<string>(DateTime.now().zoneName);
-    const [activeTimezone, setActiveTimezone] = useState<string>(() => {
-        if (typeof window !== "undefined") {
-            try {
-                const favRaw = localStorage.getItem("FAVORITE_CITIES");
-                if (favRaw) {
-                    const favs = JSON.parse(favRaw);
-                    if (Array.isArray(favs) && favs.length > 0)
-                        return favs[0] as string;
-                }
-            } catch {}
-        }
-        return DateTime.now().zoneName;
-    });
+    // Mounted guard to avoid hydration mismatches
+    const [mounted, setMounted] = useState(false);
+    // Persist user's system timezone so it always appears in the list (stable SSR default)
+    const [systemTimezone, setSystemTimezone] = useState<string>("UTC");
+    const [activeTimezone, setActiveTimezone] = useState<string>(() => "UTC");
 
-    const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
+    const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now().setZone("UTC"));
     const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
 
     // Favorite timezones persisted in localStorage (array of timezone strings)
@@ -51,8 +41,29 @@ export default function MiniTime() {
         { timezone: "Europe/Paris", displayName: "Paris" },
     ]);
 
-    // Update current time every second
+    // On mount, determine actual timezones and start the clock
     useEffect(() => {
+        setMounted(true);
+        try {
+            const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (browserTz) {
+                setSystemTimezone(browserTz);
+            }
+        } catch {}
+
+        try {
+            const favRaw = typeof window !== "undefined" ? localStorage.getItem("FAVORITE_CITIES") : null;
+            if (favRaw) {
+                const favs = JSON.parse(favRaw);
+                if (Array.isArray(favs) && favs.length > 0) {
+                    setActiveTimezone(favs[0] as string);
+                }
+            } else if (typeof Intl !== "undefined") {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (tz) setActiveTimezone(tz);
+            }
+        } catch {}
+
         const timer = setInterval(() => {
             setCurrentTime(DateTime.now());
         }, 1000);
@@ -243,16 +254,18 @@ export default function MiniTime() {
     };
 
     // Derive display data from favorite timezones
-    const favoriteCities = favoriteTimezones.slice(0, 4).map((tz) => ({
-        ...getTimezoneData(tz, getDisplayNameForTimezone(tz)),
-        timezone: tz,
-    }));
+    const favoriteCities = mounted
+        ? favoriteTimezones.slice(0, 4).map((tz) => ({
+              ...getTimezoneData(tz, getDisplayNameForTimezone(tz)),
+              timezone: tz,
+          }))
+        : [];
 
     return (
         <div className="container mx-4 sm:mx-auto my-15">
             <div className="flex justify-between items-center mb-10">
-                <h1 className="text-2xl sm:text-4xl font-medium tracking-tight">
-                    {formatTimezoneDisplay(activeTimezone)}
+                <h1 className="text-2xl sm:text-4xl font-medium tracking-tight" suppressHydrationWarning>
+                    {mounted ? formatTimezoneDisplay(activeTimezone) : ""}
                 </h1>
                 <Button variant="ghost" size="sm">
                     <PlusIcon className="size-4" />
@@ -260,34 +273,62 @@ export default function MiniTime() {
                 </Button>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {favoriteCities.map((city) => (
-                    <Card
-                        key={city.timezone}
-                        className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background cursor-pointer transition-colors"
-                        onClick={() => handleTimezoneChange(city.timezone)}
-                    >
-                        <CardHeader>
-                            <div className="flex justify-between items-center">
-                                <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                    {city.city}
-                                </CardTitle>
-                                <p className="text-sm text-muted-foreground">
-                                    {city.offset}
-                                </p>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex justify-between items-center">
-                                <h1 className="text-4xl font-normal tracking-tight">
-                                    {city.time}
-                                </h1>
-                                <p className="text-sm text-muted-foreground">
-                                    {city.period}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                {mounted && favoriteCities.length > 0
+                    ? favoriteCities.map((city) => (
+                          <Card
+                              key={city.timezone}
+                              className="shadow-none border-border/80 rounded-2xl hover:bg-foreground hover:text-background cursor-pointer transition-colors"
+                              onClick={() => handleTimezoneChange(city.timezone)}
+                          >
+                              <CardHeader>
+                                  <div className="flex justify-between items-center">
+                                      <CardTitle className="text-lg sm:text-xl font-medium tracking-tight" suppressHydrationWarning>
+                                          {city.city}
+                                      </CardTitle>
+                                      <p className="text-sm text-muted-foreground" suppressHydrationWarning>
+                                          {city.offset}
+                                      </p>
+                                  </div>
+                              </CardHeader>
+                              <CardContent>
+                                  <div className="flex justify-between items-center">
+                                      <h1 className="text-4xl font-normal tracking-tight" suppressHydrationWarning>
+                                          {city.time}
+                                      </h1>
+                                      <p className="text-sm text-muted-foreground" suppressHydrationWarning>
+                                          {city.period}
+                                      </p>
+                                  </div>
+                              </CardContent>
+                          </Card>
+                      ))
+                    : Array.from({ length: 4 }).map((_, idx) => (
+                          <Card
+                              key={`placeholder-${idx}`}
+                              className="shadow-none border-border/80 rounded-2xl"
+                          >
+                              <CardHeader>
+                                  <div className="flex justify-between items-center">
+                                      <CardTitle className="text-lg sm:text-xl font-medium tracking-tight text-muted-foreground">
+                                           A0
+                                      </CardTitle>
+                                      <p className="text-sm text-muted-foreground">
+                                           A0
+                                      </p>
+                                  </div>
+                              </CardHeader>
+                              <CardContent>
+                                  <div className="flex justify-between items-center">
+                                      <h1 className="text-4xl font-normal tracking-tight text-muted-foreground">
+                                          --:--
+                                      </h1>
+                                      <p className="text-sm text-muted-foreground">
+                                           A0
+                                      </p>
+                                  </div>
+                              </CardContent>
+                          </Card>
+                      ))}
             </div>
         </div>
     );
