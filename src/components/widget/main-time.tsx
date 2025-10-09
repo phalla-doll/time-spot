@@ -26,7 +26,7 @@ export default function MainTime() {
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
             }
-        } catch {}
+        } catch { }
     }, []);
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function MainTime() {
             if (typeof window !== "undefined") {
                 localStorage.setItem("timeFormat", timeFormat);
             }
-        } catch {}
+        } catch { }
     }, [timeFormat]);
 
     return (
@@ -66,7 +66,7 @@ export default function MainTime() {
                             type="single"
                             variant="outline"
                             onValueChange={(val) => {
-                                if (val === "24h" || val === "12h") {
+                                if (val && (val === "24h" || val === "12h")) {
                                     setTimeFormat(val);
                                 }
                             }}
