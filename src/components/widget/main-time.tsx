@@ -46,6 +46,10 @@ export default function MainTime() {
         try {
             if (typeof window !== "undefined") {
                 localStorage.setItem("timeFormat", timeFormat);
+                // Dispatch custom event to notify other components
+                window.dispatchEvent(
+                    new CustomEvent("timeFormatChanged", { detail: timeFormat })
+                );
             }
         } catch {}
     }, [timeFormat]);

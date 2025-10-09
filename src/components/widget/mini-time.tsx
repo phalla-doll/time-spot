@@ -27,6 +27,7 @@ export default function MiniTime() {
     });
 
     const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
+    const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
 
     // Default cities - can be customized by user
     const [selectedCities] = useState<CityTimezone[]>([
@@ -44,15 +45,37 @@ export default function MiniTime() {
         return () => clearInterval(timer);
     }, []);
 
-    // Listen for timezone changes
+    // Load time format from localStorage on mount
+    useEffect(() => {
+        try {
+            const saved =
+                typeof window !== "undefined"
+                    ? localStorage.getItem("timeFormat")
+                    : null;
+            if (saved === "12h" || saved === "24h") {
+                setTimeFormat(saved);
+            }
+        } catch { }
+    }, []);
+
+    // Listen for timezone and time format changes
     useEffect(() => {
         const handleTimezoneChange = (e: CustomEvent) => {
             setActiveTimezone(e.detail);
         };
 
+        const handleTimeFormatChange = (e: CustomEvent) => {
+            setTimeFormat(e.detail);
+        };
+
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === "ACTIVE_TIME_ZONE" && e.newValue) {
                 setActiveTimezone(e.newValue);
+            }
+            if (e.key === "timeFormat" && e.newValue) {
+                if (e.newValue === "12h" || e.newValue === "24h") {
+                    setTimeFormat(e.newValue);
+                }
             }
         };
 
@@ -61,12 +84,20 @@ export default function MiniTime() {
                 "timezoneChanged",
                 handleTimezoneChange as EventListener,
             );
+            window.addEventListener(
+                "timeFormatChanged",
+                handleTimeFormatChange as EventListener,
+            );
             window.addEventListener("storage", handleStorageChange);
 
             return () => {
                 window.removeEventListener(
                     "timezoneChanged",
                     handleTimezoneChange as EventListener,
+                );
+                window.removeEventListener(
+                    "timeFormatChanged",
+                    handleTimeFormatChange as EventListener,
                 );
                 window.removeEventListener("storage", handleStorageChange);
             };
@@ -90,7 +121,7 @@ export default function MiniTime() {
         return {
             city: displayName,
             offset: time.toFormat("ZZZZ"),
-            time: time.toFormat("HH:mm"),
+            time: timeFormat === "24h" ? time.toFormat("HH:mm") : time.toFormat("hh:mm"),
             period: time.hour >= 6 && time.hour < 18 ? "Day" : "Night",
         };
     };
@@ -99,7 +130,7 @@ export default function MiniTime() {
     const userTimezone = currentTime.setZone(activeTimezone);
     const userCity = formatTimezoneDisplay(activeTimezone).split(", ")[0];
     const userOffset = userTimezone.toFormat("ZZZZ");
-    const userTime = userTimezone.toFormat("HH:mm");
+    const userTime = timeFormat === "24h" ? userTimezone.toFormat("HH:mm") : userTimezone.toFormat("hh:mm");
     const userPeriod =
         userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
