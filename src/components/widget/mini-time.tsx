@@ -21,6 +21,17 @@ export default function MiniTime() {
         return DateTime.now().zoneName;
     });
 
+    const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
+
+    // Update current time every second
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(DateTime.now());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
     // Listen for timezone changes
     useEffect(() => {
         const handleTimezoneChange = (e: CustomEvent) => {
@@ -61,6 +72,29 @@ export default function MiniTime() {
         return timezone;
     };
 
+    // Helper function to get timezone data
+    const getTimezoneData = (timezone: string, displayName: string) => {
+        const time = currentTime.setZone(timezone);
+        return {
+            city: displayName,
+            offset: time.toFormat("ZZZZ"),
+            time: time.toFormat("HH:mm"),
+            period: time.hour >= 6 && time.hour < 18 ? "Day" : "Night"
+        };
+    };
+
+    // Get current user timezone info
+    const userTimezone = currentTime.setZone(activeTimezone);
+    const userCity = formatTimezoneDisplay(activeTimezone).split(", ")[0];
+    const userOffset = userTimezone.toFormat("ZZZZ");
+    const userTime = userTimezone.toFormat("HH:mm");
+    const userPeriod = userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
+
+    // Get data for popular cities
+    const tokyo = getTimezoneData("Asia/Tokyo", "Tokyo");
+    const newYork = getTimezoneData("America/New_York", "New York");
+    const paris = getTimezoneData("Europe/Paris", "Paris");
+
     return (
         <div className="container mx-4 sm:mx-auto my-15">
             <div className="flex justify-between items-center mb-10">
@@ -77,20 +111,20 @@ export default function MiniTime() {
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                Phnom Penh
+                                {userCity}
                             </CardTitle>
                             <p className="text-sm text-muted-foreground">
-                                UTC+7
+                                {userOffset}
                             </p>
                         </div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between items-center">
                             <h1 className="text-4xl font-normal tracking-tight">
-                                12:00
+                                {userTime}
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                Night
+                                {userPeriod}
                             </p>
                         </div>
                     </CardContent>
@@ -99,19 +133,19 @@ export default function MiniTime() {
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                Los Angeles
+                                {tokyo.city}
                             </CardTitle>
                             <p className="text-sm text-muted-foreground">
-                                UTC+7
+                                {tokyo.offset}
                             </p>
                         </div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between items-center">
                             <h1 className="text-4xl font-normal tracking-tight">
-                                10:00
+                                {tokyo.time}
                             </h1>
-                            <p className="text-sm text-muted-foreground">Day</p>
+                            <p className="text-sm text-muted-foreground">{tokyo.period}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -119,20 +153,20 @@ export default function MiniTime() {
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                London
+                                {newYork.city}
                             </CardTitle>
                             <p className="text-sm text-muted-foreground">
-                                UTC+7
+                                {newYork.offset}
                             </p>
                         </div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between items-center">
                             <h1 className="text-4xl font-normal tracking-tight">
-                                01:00
+                                {newYork.time}
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                Night
+                                {newYork.period}
                             </p>
                         </div>
                     </CardContent>
@@ -141,20 +175,20 @@ export default function MiniTime() {
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-lg sm:text-xl font-medium tracking-tight">
-                                Singapore
+                                {paris.city}
                             </CardTitle>
                             <p className="text-sm text-muted-foreground">
-                                UTC+7
+                                {paris.offset}
                             </p>
                         </div>
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between items-center">
                             <h1 className="text-4xl font-normal tracking-tight">
-                                14:00
+                                {paris.time}
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                Night
+                                {paris.period}
                             </p>
                         </div>
                     </CardContent>
