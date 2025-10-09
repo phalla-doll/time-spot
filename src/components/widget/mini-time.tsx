@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { CornerDownRight } from "lucide-react";
 import { DateTime } from "luxon";
