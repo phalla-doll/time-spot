@@ -5,7 +5,7 @@ import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import TimezoneSearch from "./timezone-search";
+import TimezoneSearch from "@/components/widget/timezone-search";
 
 interface CityTimezone {
     timezone: string;
