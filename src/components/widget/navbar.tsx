@@ -58,7 +58,7 @@ export default function Navbar() {
                 <div className="flex gap-2 items-center">
                     <ThemeSwitcher />
                     <Button size="sm" variant="default">
-                        Register / Login
+                        Register / Log in
                     </Button>
                 </div>
             </div>
