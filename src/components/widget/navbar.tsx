@@ -20,7 +20,7 @@ export default function Navbar() {
         <div className="container mx-auto">
             <div className="flex justify-between items-center p-4">
                 <div className="">
-                    <h1 className="text-xl font-semibold tracking-tight flex items-center gap-2">
+                    <h1 className="text-xl font-semibold tracking-tight flex items-center gap-x-2">
                         <Image
                             src={"/logo/timespot-logo.svg"}
                             width={24}
@@ -28,7 +28,7 @@ export default function Navbar() {
                             alt="TimeSpot Logo"
                             className="h-5 w-auto"
                         ></Image>
-                        Time Spot
+                        <span className="hidden sm:block">Time Spot</span>
                     </h1>
                 </div>
                 <div>
