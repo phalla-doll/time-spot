@@ -107,9 +107,12 @@ export default function TimezoneSearch({
                     <span className="hidden sm:block">
                         Press Enter to select
                     </span>
+                    <span className="block sm:hidden">
+                        Click to select
+                    </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>Local: {DateTime.now().toFormat("ZZZZ")}</span>
+                    <span>Local: <span className="font-medium hover:underline cursor-pointer">{DateTime.now().toFormat("ZZZZ")}</span></span>
                 </div>
             </div>
         </CommandDialog>
