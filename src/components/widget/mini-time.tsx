@@ -259,7 +259,7 @@ export default function MiniTime() {
                     Add city
                 </Button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {favoriteCities.map((city) => (
                     <Card
                         key={city.timezone}
