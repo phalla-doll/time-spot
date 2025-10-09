@@ -112,7 +112,7 @@ export default function ContactDialog() {
 								<p className="text-xs text-destructive">{submitError}</p>
 							) : null}
 							{submitSuccess ? (
-								<p className="text-xs text-emerald-600">Thanks! We received your info.</p>
+								<p className="text-sm text-emerald-600">Thanks! We received your info.</p>
 							) : null}
 						</div>
 						<Button type="submit" variant="default" disabled={submitting}>
