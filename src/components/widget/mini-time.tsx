@@ -55,7 +55,7 @@ export default function MiniTime() {
             if (saved === "12h" || saved === "24h") {
                 setTimeFormat(saved);
             }
-        } catch { }
+        } catch {}
     }, []);
 
     // Listen for timezone and time format changes
@@ -121,7 +121,10 @@ export default function MiniTime() {
         return {
             city: displayName,
             offset: time.toFormat("ZZZZ"),
-            time: timeFormat === "24h" ? time.toFormat("HH:mm") : time.toFormat("hh:mm"),
+            time:
+                timeFormat === "24h"
+                    ? time.toFormat("HH:mm")
+                    : time.toFormat("hh:mm"),
             period: time.hour >= 6 && time.hour < 18 ? "Day" : "Night",
         };
     };
@@ -130,7 +133,10 @@ export default function MiniTime() {
     const userTimezone = currentTime.setZone(activeTimezone);
     const userCity = formatTimezoneDisplay(activeTimezone).split(", ")[0];
     const userOffset = userTimezone.toFormat("ZZZZ");
-    const userTime = timeFormat === "24h" ? userTimezone.toFormat("HH:mm") : userTimezone.toFormat("hh:mm");
+    const userTime =
+        timeFormat === "24h"
+            ? userTimezone.toFormat("HH:mm")
+            : userTimezone.toFormat("hh:mm");
     const userPeriod =
         userTimezone.hour >= 6 && userTimezone.hour < 18 ? "Day" : "Night";
 
@@ -143,10 +149,10 @@ export default function MiniTime() {
             period: userPeriod,
             timezone: activeTimezone,
         },
-        ...selectedCities.map(city => ({
+        ...selectedCities.map((city) => ({
             ...getTimezoneData(city.timezone, city.displayName),
             timezone: city.timezone,
-        }))
+        })),
     ];
 
     return (

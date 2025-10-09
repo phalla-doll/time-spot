@@ -48,7 +48,9 @@ export default function MainTime() {
                 localStorage.setItem("timeFormat", timeFormat);
                 // Dispatch custom event to notify other components
                 window.dispatchEvent(
-                    new CustomEvent("timeFormatChanged", { detail: timeFormat })
+                    new CustomEvent("timeFormatChanged", {
+                        detail: timeFormat,
+                    }),
                 );
             }
         } catch {}
