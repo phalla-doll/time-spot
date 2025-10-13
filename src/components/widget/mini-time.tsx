@@ -301,7 +301,7 @@ export default function MiniTime() {
         <div className="container mx-2 sm:mx-auto my-10 sm:my-15">
             <div className="flex justify-between items-center mx-4 mb-10">
                 <h1
-                    className="text-2xl sm:text-4xl font-medium tracking-tight"
+                    className="text-2xl sm:text-5xl font-medium tracking-tight"
                     suppressHydrationWarning
                 >
                     {mounted ? formatTimezoneDisplay(activeTimezone) : ""}
