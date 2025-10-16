@@ -39,7 +39,7 @@ export default function Navbar() {
                             alt="TimeSpot Logo"
                             className="h-5 w-auto hidden dark:block"
                         ></Image>
-                        <span className="hidden sm:block">Time Spot</span>
+                        <span className="hidden sm:block text-xl font-semibold tracking-tight">TimeSpot</span>
                     </h1>
                 </div>
                 <div>
